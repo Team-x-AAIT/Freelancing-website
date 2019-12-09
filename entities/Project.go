@@ -1,4 +1,4 @@
-package entites
+package entities
 
 // Project is a stuct that defines the type Project.
 type Project struct {
