@@ -4,12 +4,18 @@ import (
 	"database/sql"
 	"net/http"
 
+	_ "github.com/lib/pq"
+
 	"github.com/Team-x-AAIT/Freelancing-website/entities"
 	"github.com/Team-x-AAIT/Freelancing-website/user"
-	_ "github.com/go-sql-driver/mysql"
 )
 
+<<<<<<< HEAD
 var db, err = sql.Open("mysql", "root:0911@tcp(localhost:3336)/FjobsDB")
+=======
+// connecting to postgres database
+var db, err = sql.Open("postgres", "postgres://postgres:admin123@localhost/FjobsDB?sslmode=disable")
+>>>>>>> 4ff49aa453fa664773ad7afddceec2681b483091
 
 var repositoryDB = user.NewPsqlUserRepository(db)
 var service = user.NewUserService(repositoryDB)
@@ -37,6 +43,10 @@ func register(w http.ResponseWriter, r *http.Request) {
 func main() {
 
 	if err != nil {
+		panic(err)
+	}
+
+	if err = db.Ping(); err != nil {
 		panic(err)
 	}
 

@@ -2,7 +2,6 @@ package user
 
 import (
 	"database/sql"
-	"errors"
 	"fmt"
 
 	"github.com/Team-x-AAIT/Freelancing-website/entities"
@@ -30,6 +29,23 @@ func (psql *PsqlUserRepository) AddUser(user *entities.User) error {
 	row.Scan(&totalNumOfUsers)
 	user.UID = fmt.Sprintf("UID%d", totalNumOfUsers+1)
 
+<<<<<<< HEAD
+=======
+	// _, err := psql.connection.Exec(`INSERT INTO Users (uid, first_name, last_name, password, phonenumber, email, job_title, country, city, gender, rating)
+	// VALUES ($1,$2,$3,$4,$5,$6,$7,$8,$9,$10,$11)`,
+	// 	user.UID,
+	// 	user.Firstname,
+	// 	user.Lastname,
+	// 	user.Password,
+	// 	user.Phonenumber,
+	// 	user.Email,
+	// 	user.JobTitle,
+	// 	user.Country,
+	// 	user.City,
+	// 	user.Gender,
+	// 	user.Rating)
+
+>>>>>>> 4ff49aa453fa664773ad7afddceec2681b483091
 	stmt, _ := psql.connection.Prepare(`INSERT INTO Users (uid, first_name, last_name, password, phonenumber, email, job_title, country, city, gender, rating)
 	 																VALUES (?,?,?,?,?,?,?,?,?,?,?)`)
 	_, err := stmt.Exec(
@@ -46,7 +62,7 @@ func (psql *PsqlUserRepository) AddUser(user *entities.User) error {
 		user.Rating)
 
 	if err != nil {
-		return errors.New("email already exists")
+		return err
 	}
 	return nil
 }
