@@ -1,24 +1,28 @@
 package user
 
-import "github.com/Team-x-AAIT/Freelancing-website/entites"
+import "github.com/Team-x-AAIT/Freelancing-website/entities"
 
-// UserService is a struct that defines the UserService type.
-type UserService struct {
-	conn *UserRepository
+// Service is a struct that defines the UserService type.
+type Service struct {
+	conn Repository
 }
 
-// UserServices is an interface that specifies what User type can do.
-type UserServices interface {
-	RegisterUser(entites.User) error
+// Services is an interface that specifies what User type can do.
+type Services interface {
+	RegisterUser(*entities.User) error
 }
 
 // NewUserService is a function that returns a new UserService type.
-func NewUserService(connection *UserRepository) *UserService {
-	return &UserService{conn: connection}
+func NewUserService(connection Repository) Services {
+	return &Service{conn: connection}
 }
 
 // RegisterUser is a method that register a new user to the system.
-func (service *UserService) RegisterUser(user entites.User) (err error) {
-	err = nil
-	return
+func (service *Service) RegisterUser(user *entities.User) (err error) {
+	err = service.conn.AddUser(user)
+
+	if err != nil {
+		return err
+	}
+	return nil
 }
