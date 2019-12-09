@@ -4,4 +4,3 @@ We are proposing in building a web base system that makes freelancing easy and l
 
 As we go in detail about this system, ever user will have a board which he/she can view an available project that is open for applicant. The user can apply for the given project by uploading the needed requirements and wait for the project creator response. If the project creator is satisfied by the applicant resume the project creator can hire the applicant and the applicant may accept or decline the creator’s offering. Also, user can create a project for hiring by providing information about the project, then view all the applicants for the project and hire the best applicant.
 
-Checking implementationBR
