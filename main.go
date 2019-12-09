@@ -9,22 +9,22 @@ import (
 	_ "github.com/go-sql-driver/mysql"
 )
 
-var db, err = sql.Open("mysql", "root:0911@tcp(localhost:7777)/FjobsDB")
+var db, err = sql.Open("mysql", "root:0911@tcp(localhost:3336)/FjobsDB")
 
 var repositoryDB = user.NewPsqlUserRepository(db)
 var service = user.NewUserService(repositoryDB)
 
 func register(w http.ResponseWriter, r *http.Request) {
 
-	firstname := r.FormValue("firstname")
-	lastname := r.FormValue("lastname")
-	password := r.FormValue("password")
-	phonenumber := r.FormValue("phonenumber")
-	email := r.FormValue("email")
-	jobTitle := r.FormValue("jobTitle")
-	country := r.FormValue("country")
-	city := r.FormValue("city")
-	gender := r.FormValue("gender")
+	firstname := r.URL.Query().Get("firstname")
+	lastname := r.URL.Query().Get("lastname")
+	password := r.URL.Query().Get("password")
+	phonenumber := r.URL.Query().Get("phonenumber")
+	email := r.URL.Query().Get("email")
+	jobTitle := r.URL.Query().Get("jobTitle")
+	country := r.URL.Query().Get("country")
+	city := r.URL.Query().Get("city")
+	gender := r.URL.Query().Get("gender")
 
 	user := entities.NewUser(firstname, lastname, password, phonenumber, email, jobTitle, country, city, gender)
 

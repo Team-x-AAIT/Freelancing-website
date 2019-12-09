@@ -30,7 +30,7 @@ func (psql *PsqlUserRepository) AddUser(user *entities.User) error {
 	row.Scan(&totalNumOfUsers)
 	user.UID = fmt.Sprintf("UID%d", totalNumOfUsers+1)
 
-	stmt, _ := psql.connection.Prepare(`INSERT INTO Users (UID, Firstname, Lastname, Password, Phonenumber, Email, JobTitle, Country, City, Gender, Rating)
+	stmt, _ := psql.connection.Prepare(`INSERT INTO Users (uid, first_name, last_name, password, phonenumber, email, job_title, country, city, gender, rating)
 	 																VALUES (?,?,?,?,?,?,?,?,?,?,?)`)
 	_, err := stmt.Exec(
 		user.UID,
