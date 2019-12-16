@@ -4,50 +4,41 @@ import (
 	"database/sql"
 	"net/http"
 
-	_ "github.com/lib/pq"
-
-	"github.com/Team-x-AAIT/Freelancing-website/entities"
 	"github.com/Team-x-AAIT/Freelancing-website/user"
+	_ "github.com/go-sql-driver/mysql"
 )
 
-// connecting to postgres database
-var db, err = sql.Open("postgres", "postgres://postgres:admin123@localhost/FjobsDB?sslmode=disable")
+var db *sql.DB
 
-var repositoryDB = user.NewPsqlUserRepository(db)
-var service = user.NewUserService(repositoryDB)
+func init() {
 
-func register(w http.ResponseWriter, r *http.Request) {
-
-	firstname := r.URL.Query().Get("firstname")
-	lastname := r.URL.Query().Get("lastname")
-	password := r.URL.Query().Get("password")
-	phonenumber := r.URL.Query().Get("phonenumber")
-	email := r.URL.Query().Get("email")
-	jobTitle := r.URL.Query().Get("jobTitle")
-	country := r.URL.Query().Get("country")
-	city := r.URL.Query().Get("city")
-	gender := r.URL.Query().Get("gender")
-
-	user := entities.NewUser(firstname, lastname, password, phonenumber, email, jobTitle, country, city, gender)
-
-	err := service.RegisterUser(user)
+	db, err := sql.Open("mysql", "root:0911@tcp(localhost:3306)/FjobsDB")
 	if err != nil {
 		panic(err)
 	}
+	if err := db.Ping(); err != nil {
+		panic(err)
+	}
+
+	user.URepositoryDB = user.NewRepository(db)
+	user.UService = user.NewService(user.URepositoryDB)
 }
 
 func main() {
 
-	if err != nil {
-		panic(err)
-	}
-
-	if err = db.Ping(); err != nil {
-		panic(err)
-	}
-
 	mux := http.NewServeMux()
-	mux.HandleFunc("/Register", register)
+	mux.HandleFunc("/", user.HandleMain)
+	mux.HandleFunc("/Register", user.Register)
+	mux.HandleFunc("/Verify", user.Verify)
+	mux.HandleFunc("/Check_Your_Email", user.Index)
+
+	mux.HandleFunc("/GoogleLogin", user.HandleGoogleLogin)
+	mux.HandleFunc("/GoogleCallback", user.HandleGoogleCallback)
+	mux.HandleFunc("/LinkedInLogin", user.HandleLinkedInLogin)
+	mux.HandleFunc("/LinkedInCallback", user.HandleLinkedInCallback)
+	mux.HandleFunc("/FacebookLogin", user.HandleFacebookLogin)
+	mux.HandleFunc("/FacebookCallback", user.HandleFacebookCallback)
+	mux.HandleFunc("/check", user.Index)
 	server := http.Server{
 		Addr:    ":1234",
 		Handler: mux,
