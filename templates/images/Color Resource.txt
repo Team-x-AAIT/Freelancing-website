@@ -1,2 +1,0 @@
-Footer color -- the footer uses linear gradient color type {From #FF4E50 - to #F7B733}
-Signup background color -- #7BC1BF
