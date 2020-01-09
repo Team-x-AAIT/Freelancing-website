@@ -1,0 +1,128 @@
+nav {
+  background-color: white;
+  border-bottom: solid #dfe0e3 1px;
+  box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
+  overflow: hidden;
+}
+
+nav li a,
+#navText {
+  color: #da571f;
+}
+#navText {
+  font-size: 2em;
+  display: none;
+}
+
+#nav-logo {
+  width: 3.5em;
+  height: 3.5em;
+  border-radius: 50%;
+  box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
+}
+
+.small-images{
+    width: 35px;
+    height: 35px;
+    margin: 0;
+    cursor: pointer;
+}
+
+#profile img{
+    width: 40px;
+    height: 40px;
+    box-shadow: 0 1px 4px 0 rgba(143, 141, 141, 0.16),
+    0 6px 20px 0 rgba(0, 0, 0, 0.16);
+    cursor: pointer;
+}
+
+#nav-post-button {
+  background-color: #da571f;
+  border: solid #da571f 1px;
+  color: white;
+  font-weight: bold;
+}
+#nav-post-button:hover {
+  background-color: #f8f9fc;
+  color: #da571f;
+}
+#register-link {
+  border-left: solid 1px;
+}
+nav li a:hover {
+  color: rgb(163, 49, 0) !important;
+}
+
+#mySidenav,
+#toogle-button {
+  display: none;
+}
+
+.sidenav {
+  height: 100%;
+  width: 0;
+  position: fixed;
+  z-index: 1;
+  top: 0;
+  right: 0;
+  background-color: #dfe0e3;
+  overflow-x: hidden;
+  padding-top: 60px;
+  transition: 0.5s;
+}
+
+.sidenav a {
+  padding: 8px 8px 8px 32px;
+  text-decoration: none;
+  font-size: 16px;
+  color: #818181;
+  display: block;
+  transition: 0.3s;
+}
+
+.sidenav a:hover {
+  color: #da571f;
+}
+
+.sidenav .closebtn {
+  position: absolute;
+  top: 0;
+  right: 25px;
+  font-size: 36px;
+  margin-left: 50px;
+}
+
+#slider-post-button {
+  background-color: transparent;
+  border: solid #da571f 1px;
+  font-size: 20px;
+  color: #818181;
+  margin: auto;
+}
+#slider-post-button:hover {
+  background: #da571f;
+  color: white;
+}
+
+@media screen and (max-width: 768px) {
+  #navMenu {
+    display: none;
+  }
+  #navText {
+    display: block;
+  }
+
+  #mySidenav,
+  #toogle-button {
+    display: block;
+  }
+}
+
+@media screen and (max-height: 450px) {
+  .sidenav {
+    padding-top: 15px;
+  }
+  .sidenav a {
+    font-size: 18px;
+  }
+}
