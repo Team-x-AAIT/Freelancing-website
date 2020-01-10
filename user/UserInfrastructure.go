@@ -339,3 +339,261 @@ func Login(w http.ResponseWriter, r *http.Request) {
 
 	http.Redirect(w, r, "/Dashboard", http.StatusSeeOther)
 }
+
+// UpdateProfile is a Handler func that initaite the updating profile process.
+func UpdateProfile(w http.ResponseWriter, r *http.Request) {
+
+	loggedInUser := Authentication(r)
+	if loggedInUser == nil {
+		http.Redirect(w, r, "/Login_Page", http.StatusSeeOther)
+		return
+	}
+
+	var profilePic, cv string
+	firstname := r.FormValue("firstname")
+	lastname := r.FormValue("lastname")
+	phonenumber := r.FormValue("phonenumber")
+	email := r.FormValue("email")
+	jobTitle := r.FormValue("jobTitle")
+	country := r.FormValue("country")
+	city := r.FormValue("city")
+	gender := r.FormValue("gender")
+	bio := r.FormValue("bio")
+	// In Edit profile password will not be change be still it will be authenticated!
+	password := "ValidPassword123"
+
+	user := entities.NewUser(firstname, lastname, email, profilePic, password, phonenumber, jobTitle, country, city, gender, cv, bio)
+	user.UID = loggedInUser.UID
+
+	err := UService.Verification(user, Identification{ConfirmPassword: "ValidPassword123", From: "EditProfile"})
+	if err != nil {
+		w.Write([]byte(err.Error()))
+		panic(err)
+	}
+	user.ProfilePic = ResourceExtractor(user.UID, "profilePic", "image", r)
+	user.CV = ResourceExtractor(user.UID, "cv", "file", r)
+	err = UService.EditUserProfile(user)
+	if err != nil {
+		w.Write([]byte(err.Error()))
+		panic(err)
+	}
+
+	w.Write([]byte("Okay"))
+}
+
+// Dashboard is a Handler func that initaite the Home page of a user after checking his/her profile is completed.
+func Dashboard(w http.ResponseWriter, r *http.Request) {
+
+	user := Authentication(r)
+	if user == nil {
+		http.Redirect(w, r, "/Login_Page", http.StatusSeeOther)
+		return
+	}
+
+	// Means incomplete profile.
+	if user.Gender == "" {
+		http.Redirect(w, r, "/EditProfile", http.StatusSeeOther)
+		return
+	}
+
+	Temp.ExecuteTemplate(w, "Dashboard.html", user)
+
+}
+
+// Verify is a Handler func that verify a token from a request query and user to database if valid.
+func Verify(w http.ResponseWriter, r *http.Request) {
+	verificationToken := r.URL.Query().Get("token")
+	email := r.URL.Query().Get("email")
+
+	for _, value := range UserTempRepository {
+		if value.token == verificationToken && value.user.Email == email {
+			err := UService.RegisterUser(value.user)
+			if err != nil {
+				panic(err)
+			}
+			session, _ := cookieStore.Get(r, "Fjobs_User_Cookie")
+			session.Values["email"] = email
+			session.Values["auth"] = true
+			session.Save(r, w)
+			http.Redirect(w, r, "/Dashboard", http.StatusSeeOther)
+			return
+		}
+	}
+	http.Error(w, "invalid verification Token!", http.StatusBadRequest)
+}
+
+// EditProfile is a Handler func that initaite the Editing profile process.
+func EditProfile(w http.ResponseWriter, r *http.Request) {
+
+	user := Authentication(r)
+	if user == nil {
+		http.Redirect(w, r, "/Login_Page", http.StatusSeeOther)
+		return
+	}
+
+	Temp.ExecuteTemplate(w, "ProfilePage.html", user)
+}
+
+// Authentication is a function that checks if the user has already logged in or not.
+func Authentication(r *http.Request) *entities.User {
+
+	session, _ := cookieStore.Get(r, "Fjobs_User_Cookie")
+	email, ok := session.Values["email"].(string)
+
+	if !ok {
+		return nil
+	}
+	auth, ok := session.Values["auth"].(bool)
+	if !ok || !auth {
+		return nil
+	}
+
+	user := UService.SearchUser(email)
+	return user
+}
+
+// Logout is a Handler func that perform logout operation by revoking authentication pass.
+func Logout(w http.ResponseWriter, r *http.Request) {
+	session, _ := cookieStore.Get(r, "Fjobs_User_Cookie")
+
+	session.Values["auth"] = false
+	session.Options.MaxAge = -1
+	session.Save(r, w)
+	http.Redirect(w, r, "/Login_Page", http.StatusSeeOther)
+}
+
+// AddMatchTag is a Handler func that accepts the matching tags store them.
+func AddMatchTag(w http.ResponseWriter, r *http.Request) {
+
+	user := Authentication(r)
+	if user == nil {
+		http.Redirect(w, r, "/Login_Page", http.StatusSeeOther)
+		return
+	}
+	uid := user.UID
+	category := r.FormValue("category")
+	subcategory := r.FormValue("subcategory")
+	worktype := r.FormValue("worktype")
+
+	if err := UService.AddMatchTag(uid, category, subcategory, worktype); err != nil {
+		panic(err)
+	}
+	w.Write([]byte("okay"))
+
+}
+
+// RemoveMatchTag is a Handler func that accepts the matching tags and remove it.
+func RemoveMatchTag(w http.ResponseWriter, r *http.Request) {
+
+	user := Authentication(r)
+	if user == nil {
+		http.Redirect(w, r, "/Login_Page", http.StatusSeeOther)
+		return
+	}
+	uid := user.UID
+	category := r.FormValue("category")
+	subcategory := r.FormValue("subcategory")
+	worktype := r.FormValue("worktype")
+
+	if err := UService.RemoveMatchTag(uid, category, subcategory, worktype); err != nil {
+		panic(err)
+	}
+
+	w.Write([]byte("okay"))
+}
+
+// GetMatchTags is a Handler func that sends all the match tag the user have.
+func GetMatchTags(w http.ResponseWriter, r *http.Request) {
+	user := Authentication(r)
+	if user == nil {
+		http.Redirect(w, r, "/Login_Page", http.StatusSeeOther)
+		return
+	}
+
+	matchTagStore := UService.GetMatchTags(user.UID)
+	json, err := json.Marshal(matchTagStore)
+	if err != nil {
+		panic(err)
+	}
+
+	w.Write(json)
+
+}
+
+// GetProjectsWMatchTags is a Handler func that sends all the projects taht match the user match Tags.
+func GetProjectsWMatchTags(w http.ResponseWriter, r *http.Request) {
+
+	user := Authentication(r)
+	if user == nil {
+		http.Redirect(w, r, "/Login_Page", http.StatusSeeOther)
+		return
+	}
+
+	uid := user.UID
+
+	projects := UService.SearchProjectWMatchTag(uid)
+
+	json, err := json.Marshal(projects)
+	if err != nil {
+		panic(err)
+	}
+
+	w.Write(json)
+}
+
+// ResourceExtractor is a method that extract file from a request.
+func ResourceExtractor(uid string, name string, fileType string, r *http.Request) string {
+
+	count := randomStringGN(10)
+
+	fm, fh, err := r.FormFile(name)
+	if err != nil {
+		return ""
+	}
+	defer fm.Close()
+
+	path, _ := os.Getwd()
+	suffix := ""
+	endPoint := 0
+
+	for i := len(fh.Filename) - 1; i >= 0; i-- {
+		if fh.Filename[i] == '.' {
+			endPoint = i
+			break
+		}
+	}
+
+	for ; endPoint < len(fh.Filename); endPoint++ {
+		suffix += string(fh.Filename[endPoint])
+	}
+
+	NewFileName := fmt.Sprintf("asset_"+fileType+"_"+uid+"_%s"+suffix, count)
+	if name == "profilePic" {
+		column := "profile_pic"
+		path = filepath.Join(path, "assets", column, NewFileName)
+	} else {
+		path = filepath.Join(path, "assets", name, NewFileName)
+	}
+
+	out, _ := os.Create(path)
+	defer out.Close()
+
+	_, err = io.Copy(out, fm)
+
+	if err != nil {
+		panic(err)
+	}
+
+	return NewFileName
+
+}
+
+// Index is check function.
+func Index(w http.ResponseWriter, r *http.Request) {
+	w.Write([]byte("Sucessfull!"))
+}
+
+// IndexNot is check function.
+func IndexNot(w http.ResponseWriter, r *http.Request) {
+	w.Write([]byte("Not Sucessfull!"))
+}
