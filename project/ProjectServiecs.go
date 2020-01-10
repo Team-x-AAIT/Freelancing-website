@@ -207,3 +207,82 @@ func (service *Service) HireApplicant(pid string, applicantUID string) error {
 
 	return nil
 }
+
+// RemoveApplicant is a method that removes or detaches an applicant from project.
+func (service *Service) RemoveApplicant(applicantUID, pid string) error {
+
+	err := service.conn.RemoveApplicationInfo(applicantUID, pid)
+	if err != nil {
+		return err
+	}
+	return nil
+}
+
+// CheckApplicationStatus is a method that checks users application status and returns its state.
+func (service *Service) CheckApplicationStatus(pid, applicantUID string) int64 {
+
+	project := service.SearchProjectByID(pid)
+	application := service.conn.GetApplication(pid, applicantUID)
+	applicationComparable := service.conn.GetApplicationFromHistory(pid, applicantUID)
+
+	// Means the Project is removed.
+	if project.ID == "" {
+		// project removed
+		return 5
+	}
+	if application.PID == "" {
+
+		if applicationComparable.PID != "" && applicationComparable.Hired {
+			// Fired
+			return 4
+		}
+		if applicationComparable.PID != "" && !applicationComparable.Hired {
+			//Applicant removed from project(rejected)
+			return 3
+		}
+
+	} else {
+		if applicationComparable.PID != "" && applicationComparable.Hired {
+			// Hired
+			return 2
+		}
+		if applicationComparable.PID != "" && !applicationComparable.Hired {
+			// Pending request
+			return 1
+		}
+
+	}
+	return 0
+}
+
+// GetProjectApplicantsID is a method that returns a list of users ID and there proposal that applied for a certain project.
+func (service *Service) GetProjectApplicantsID(pid string) []*ApplicationBag {
+
+	listOfApplicantsID := service.conn.GetApplicants(pid)
+	return listOfApplicantsID
+}
+
+// Validateproject is a method that is used for valdiating project information.
+func (service *Service) validateProject(project *entities.Project) error {
+
+	switch {
+	case len(project.Title) < 3:
+		return errors.New("title length too short")
+	case len(project.Description) < 3:
+		return errors.New("description length too short")
+	case len(project.Details) < 3:
+		return errors.New("details length too short")
+	case project.WorkType > 3:
+		return errors.New("unknown worktype")
+	}
+
+	if flag := service.conn.SearchMember("categories", project.Category); !flag {
+		return errors.New("unknown category")
+	}
+
+	if flag := service.conn.SearchMember("subcategories", project.Subcategory); !flag {
+		return errors.New("unknown subcategory")
+	}
+	return nil
+
+}
