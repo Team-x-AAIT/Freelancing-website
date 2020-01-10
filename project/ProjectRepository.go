@@ -286,3 +286,293 @@ func (psql *Repository) HireApplicant(pid string, applicantUID string) error {
 	return nil
 
 }
+
+// RemoveUnHiredApplicants is a method that removes all unhired applicants and unlink them from the project.
+func (psql *Repository) RemoveUnHiredApplicants(pid string) error {
+
+	stmt, _ := psql.connection.Prepare(`DELETE FROM application_table WHERE pid=? && hire=FALSE`)
+	_, err := stmt.Exec(pid)
+
+	if err != nil {
+		return err
+	}
+	return nil
+}
+
+// LinkProject is a method that links a project to user.
+func (psql *Repository) LinkProject(uid, pid string) error {
+
+	stmt, _ := psql.connection.Prepare(`INSERT INTO user_project_table (uid, pid) VALUES (?,?)`)
+	_, err := stmt.Exec(uid, pid)
+
+	if err != nil {
+		return err
+	}
+	return nil
+
+}
+
+// UnLinkProject is a method that a unlinks a project from a user.
+func (psql *Repository) UnLinkProject(uid, pid string) error {
+
+	stmt, _ := psql.connection.Prepare(`DELETE FROM user_project_table WHERE uid=? && pid=?`)
+	_, err := stmt.Exec(uid, pid)
+
+	if err != nil {
+		return err
+	}
+	return nil
+
+}
+
+// SearchLink is a method that is used for identifying a certain link exists between a project and a user.
+func (psql *Repository) SearchLink(uid, pid string) bool {
+
+	stmt, _ := psql.connection.Prepare("SELECT COUNT(*) FROM user_project_table WHERE uid=? && pid=?")
+
+	var totalNumOfMembers int
+	row := stmt.QueryRow(uid, pid)
+	row.Scan(&totalNumOfMembers)
+
+	if totalNumOfMembers > 0 {
+		return true
+	}
+	return false
+}
+
+// SearchProject is a method that is used for searching a projects from the database using a search-key.
+func (psql *Repository) SearchProject(searchKey string, searchBy string, filterType int64, filterValue1 float64, filterValue2 float64, pageNumber int64) []*entities.Project {
+
+	resultLimit := int64(10)
+	resultBeginning := pageNumber*resultLimit - resultLimit
+	resultEnding := pageNumber*resultLimit - 1
+	ctx := context.Background()
+	stmt := ""
+	rows, err := psql.connection.QueryContext(ctx, stmt)
+
+	switch {
+	case searchBy == "title" && filterType != -1:
+		stmt = `SELECT * FROM projects WHERE title=? && closed=false
+		&& worktype=? && (? < budget < ?) ORDER BY title ASC LIMIT ?,?`
+		rows, err = psql.connection.QueryContext(ctx, stmt, searchKey, filterType,
+			filterValue1, filterValue2, resultBeginning, resultEnding)
+
+	case searchBy == "category" && filterType != -1:
+		stmt = `SELECT * FROM projects WHERE category = ? && closed=false
+		 && worktype = ? && (? < budget < ?) ORDER BY title ASC LIMIT ?,?`
+		rows, err = psql.connection.QueryContext(ctx, stmt, searchKey, filterType,
+			filterValue1, filterValue2, resultBeginning, resultEnding)
+
+	case searchBy == "subcategory" && filterType != -1:
+		stmt = `SELECT * FROM projects WHERE subcategory=? && closed=false
+		&& worktype=? && (? < budget < ?) ORDER BY title ASC LIMIT ?,?`
+		rows, err = psql.connection.QueryContext(ctx, stmt, searchKey, filterType,
+			filterValue1, filterValue2, resultBeginning, resultEnding)
+
+	case filterType != -1:
+		stmt = `SELECT * FROM projects WHERE (title=? OR category=? OR subcategory=?)
+		&& closed=false && worktype=? && (? < budget < ?) ORDER BY title ASC LIMIT ?,?`
+		rows, err = psql.connection.QueryContext(ctx, stmt, searchKey, searchKey,
+			searchKey, filterType,
+			filterValue1, filterValue2, resultBeginning, resultEnding)
+
+	default:
+		stmt = `SELECT * FROM projects WHERE (title=? OR category=? OR subcategory=?)
+		&& closed=false ORDER BY title ASC LIMIT ?,?`
+		rows, err = psql.connection.QueryContext(ctx, stmt, searchKey, searchKey,
+			searchKey, resultBeginning, resultEnding)
+	}
+
+	if err != nil {
+		return nil
+	}
+
+	var projects []*entities.Project
+
+	for rows.Next() {
+		project := new(entities.Project)
+		err = rows.Scan(&project.ID, &project.Title,
+			&project.Description, &project.Details,
+			&project.Category, &project.Subcategory,
+			&project.Budget, &project.WorkType,
+			&project.Closed, &project.CreatedAt)
+
+		if err != nil {
+			panic(err)
+		}
+
+		// for postgress is different please please change it don't forget.
+		projects = append(projects, project)
+	}
+
+	return projects
+}
+
+// MarkAsClosed is a method that mark a project as closed by updating the closed filed of a project in the database.
+func (psql *Repository) MarkAsClosed(pid string) error {
+	stmt, _ := psql.connection.Prepare(`UPDATE projects SET closed=TRUE WHERE pid=?`)
+	_, err := stmt.Exec(pid)
+
+	if err != nil {
+		return err
+	}
+	return nil
+}
+
+// RemoveProject is a method that remove a project from the database using the project id.
+func (psql *Repository) RemoveProject(pid string) error {
+
+	stmt, _ := psql.connection.Prepare(`DELETE FROM projects WHERE id=?`)
+	_, err := stmt.Exec(pid)
+
+	if err != nil {
+		return err
+	}
+	return nil
+}
+
+// RemoveAttachedFiles is a method that is used for removing all the files attached to a project from the database.
+func (psql *Repository) RemoveAttachedFiles(pid string) error {
+
+	stmt, _ := psql.connection.Prepare(`DELETE FROM attached_files WHERE pid = ?`)
+	_, err := stmt.Exec(pid)
+
+	if err != nil {
+		return err
+	}
+
+	return err
+
+}
+
+// RemoveApplicationInfo is a method that remove all the applicants attached to a project.
+func (psql *Repository) RemoveApplicationInfo(uid, pid string) error {
+
+	var err error
+	// Means just removing the application linked with a certain project.
+	if uid == "" {
+		stmt, _ := psql.connection.Prepare(`DELETE FROM application_table WHERE pid = ?`)
+		_, err = stmt.Exec(pid)
+
+		// Removing an application related to a certain applicant id.
+	} else {
+		stmt, _ := psql.connection.Prepare(`DELETE FROM application_table WHERE applicant_uid=? && pid = ?`)
+		_, err = stmt.Exec(uid, pid)
+	}
+
+	if err != nil {
+		return err
+	}
+	return err
+
+}
+
+// GetApplicants is a method that returns all the applicants id's attached to a project.
+func (psql *Repository) GetApplicants(pid string) []*ApplicationBag {
+
+	stmt, _ := psql.connection.Prepare("SELECT applicant_uid, proposal, hired FROM application_table WHERE pid=?")
+
+	var listOfApplication []*ApplicationBag
+	rows, err := stmt.Query(pid)
+
+	if err != nil {
+		return nil
+	}
+
+	for rows.Next() {
+		applicationBag := new(ApplicationBag)
+		rows.Scan(&applicationBag.ApplicantID, &applicationBag.Proposal, &applicationBag.Hired)
+		listOfApplication = append(listOfApplication, applicationBag)
+	}
+
+	return listOfApplication
+
+}
+
+// UpdateApplicationTable is a method that is used for updating application table.
+func (psql *Repository) UpdateApplicationTable(pid string, applicantUID string, proposal string, status bool) error {
+
+	stmt, _ := psql.connection.Prepare(`UPDATE application_table SET proposal=?, hired=? 
+	WHERE applicant_uid=? && pid=?`)
+	_, err := stmt.Exec(proposal, status, applicantUID, pid)
+
+	if err != nil {
+		return err
+	}
+	return nil
+}
+
+// UpdateApplicationHistoryTable is a method that is used for updating application history table.
+func (psql *Repository) UpdateApplicationHistoryTable(pid string, applicantUID string, proposal string, status, seen bool) error {
+
+	stmt, _ := psql.connection.Prepare(`UPDATE application_history_table SET proposal=?, hired=?, seen=?
+	WHERE applicant_uid=? && pid=?`)
+
+	_, err := stmt.Exec(proposal, status, seen, applicantUID, pid)
+
+	if err != nil {
+		return err
+	}
+	return nil
+}
+
+// RemoveAttachedFile is a method that is used for removing a file attached to a project from the database.
+func (psql *Repository) RemoveAttachedFile(pid string, fileName string) error {
+
+	stmt, _ := psql.connection.Prepare(`DELETE FROM attached_files WHERE pid = ? AND name=?`)
+	_, err := stmt.Exec(pid, fileName)
+
+	if err != nil {
+		return err
+	}
+
+	return err
+
+}
+
+// RemoveFile is a method that removes a given file path from the assets folder.
+func (psql *Repository) RemoveFile(filename string) error {
+
+	if err := os.Remove("./assets/" + filename); err != nil {
+		return err
+	}
+
+	return nil
+
+}
+
+// CountMember is a method that is used for counting the member of a table where our table name is provided as an argument.
+func (psql *Repository) CountMember(tableName string) (totalNumOfMembers int) {
+
+	stmt, err := psql.connection.Prepare("SELECT COUNT(*) FROM " + tableName)
+	if err != nil {
+		return
+	}
+	row := stmt.QueryRow()
+	row.Scan(&totalNumOfMembers)
+	return
+
+}
+
+// SearchMember is a method that is used for searching the member of a table where our table name is provided as an argument.
+func (psql *Repository) SearchMember(tableName string, columnValue string) bool {
+
+	stmt, _ := psql.connection.Prepare("")
+	if tableName == "attached_files" || tableName == "categories" || tableName == "subcategories" {
+		stmt, _ = psql.connection.Prepare("SELECT COUNT(*) FROM " + tableName + " WHERE name=?")
+	}
+
+	if tableName == "projects" {
+		stmt, _ = psql.connection.Prepare("SELECT COUNT(*) FROM " + tableName + " WHERE id=?")
+	}
+
+	var totalNumOfMembers int
+	row := stmt.QueryRow(columnValue)
+	row.Scan(&totalNumOfMembers)
+
+	if totalNumOfMembers > 0 {
+		return true
+	}
+	return false
+
+}
