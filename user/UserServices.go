@@ -159,6 +159,8 @@ func (service *Service) EditUserProfile(user *entities.User) error {
 		return err
 	}
 
+
+
 	tempUser, _ := service.conn.SearchTPUser(user.UID)
 	if tempUser.UID != "" {
 		err := service.conn.UpdateTPUsers(user.UID, user.Email)
@@ -221,5 +223,144 @@ func (service *Service) AddMatchTag(uid string, category string, subcategory str
 	}
 
 	return nil
+}
+
+/ RemoveMatchTag is a method that facilitaties the removing of match tag of a user.
+func (service *Service) RemoveMatchTag(uid string, category string, subcategory string, worktypes string) error {
+
+	worktype := 0
+
+	switch worktypes {
+	case "Fixed":
+		worktype = 1
+	case "Perhour":
+		worktype = 2
+	case "Negotiable":
+		worktype = 3
+	case "":
+		worktype = 4
+	default:
+		return errors.New("unknow work type")
+	}
+
+	if err := service.conn.RemoveMatchTag(uid, category, subcategory, worktype); err != nil {
+		return err
+	}
+
+	return nil
+}
+
+// GetMatchTags is a method that returns all the match tag of a user a slice of match tags.
+func (service *Service) GetMatchTags(uid string) []*MatchTag {
+
+	matchTagStore := service.conn.GetUserMatchTags(uid)
+	return matchTagStore
+}
+
+// SearchProjectWMatchTag is a method that returns all projects that match user matching tags.
+func (service *Service) SearchProjectWMatchTag(uid string) []*ProjectUserContainer {
+
+	matchTagStore := service.GetMatchTags(uid)
+	var filteredProjects []*ProjectUserContainer
+
+	for _, matchTag := range matchTagStore {
+
+		projects := service.conn.SearchProjectWMatchTag(matchTag)
+
+		for _, uniqueProject := range projects {
+			unique := true
+			for _, value := range filteredProjects {
+				if uniqueProject.ID == value.Project.ID {
+					unique = false
+					break
+				}
+			}
+			if unique {
+				owner := service.conn.SearchUser(service.conn.GetOwner(uniqueProject.ID))
+				if owner.UID != uid {
+					projectUserContainer := new(ProjectUserContainer)
+					projectUserContainer.Firstname = owner.Firstname
+					projectUserContainer.Lastname = owner.Lastname
+					projectUserContainer.Phonenumber = owner.Phonenumber
+					projectUserContainer.Email = owner.Email
+					projectUserContainer.JobTitle = owner.JobTitle
+					projectUserContainer.Country = owner.Country
+					projectUserContainer.City = owner.City
+					projectUserContainer.Gender = owner.Gender
+					projectUserContainer.ProfilePic = owner.ProfilePic
+					projectUserContainer.Project = uniqueProject
+					filteredProjects = append(filteredProjects, projectUserContainer)
+				}
+
+			}
+		}
+	}
+
+	return filteredProjects
+}
+
+// AuthUserProfile is a method that authenticate a user type has a valid content or not.
+func (service *Service) AuthUserProfile(user *entities.User, idnt Identification) error {
+
+	matchFirstname, _ := regexp.MatchString(`^[a-zA-Z]\w*$`, user.Firstname)
+	matchLastname, _ := regexp.MatchString(`^\w*$`, user.Lastname)
+	matchEmail, _ := regexp.MatchString(`^[a-zA-Z0-9][a-zA-Z0-9\._\-&!?=#]*`, user.Email)
+	matchPhonenumber, _ := regexp.MatchString(`^(\d{9})?$`, user.Phonenumber)
+	matchPassword, _ := regexp.MatchString(`^\w{8}\w*$`, user.Password)
+	matchGender, _ := regexp.MatchString(`^[MFO]?$`, user.Gender)
+
+	switch {
+	case !matchFirstname:
+		return errors.New("invalid firstname")
+	case !matchLastname:
+		return errors.New("invalid lastname")
+	case !matchEmail:
+		return errors.New("invalid email")
+	case !matchPassword:
+		return errors.New("invalid password")
+	case !matchPhonenumber:
+		return errors.New("invalid phoneNumber")
+	case user.Password != idnt.ConfirmPassword:
+		return errors.New("password doesn't match")
+	case !matchGender:
+		return errors.New("invalid gender")
+	}
+
+	tempUser := service.conn.SearchUser(user.Email)
+
+	if tempUser.UID != "" && idnt.From != "EditProfile" {
+		return errors.New("email already exists")
+	}
+
+	return nil
+}
+
+// SendVerification is a method that take a temporary verification packet and send a verification email to provided email address.
+func (service *Service) SendVerification(toBeVerified TempVerificationPack) {
+	auth := smtp.PlainAuth("", "biniyam.s72@gmail.com", "0911732688", "smtp.gmail.com")
+	to := []string{toBeVerified.user.Email}
+	msg := []byte("To:" + toBeVerified.user.Email + "\r\n" +
+		"Subject: Verify your email address\r\n" + "\r\n" +
+		`Verify your email address to complete registration` + "\r\n" + "\r\n" +
+		`Hi ` + toBeVerified.user.Firstname + ",\r\n" + "\r\n" +
+		`Thanks for your interest in Fjobs! To complete your registration, we need you to verify your email address.` + "\r\n" +
+		"Open the Link to verify: " +
+		`http://localhost:1234/Verify?token=` + toBeVerified.token + "&email=" + toBeVerified.user.Email)
+	err := smtp.SendMail("smtp.gmail.com:587", auth, "biniyam.s72@gmail.com", to, msg)
+	if err != nil {
+		panic(err)
+	}
+}
+
+func randomStringGN(length int) string {
+	charset := "abcdefghijklmnopqrstuvwxyz" +
+		"ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789"
+
+	seededRand := rand.New(rand.NewSource(time.Now().UnixNano()))
+	b := make([]byte, length)
+	for i := range b {
+		b[i] = charset[seededRand.Intn(len(charset))]
+	}
+	return string(b)
 }
 
