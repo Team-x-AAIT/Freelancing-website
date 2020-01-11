@@ -8,6 +8,7 @@
     {{template "Head"}}
 
     <link rel="stylesheet" href="../templates/css/LoginPage.css">
+    <script src="../templates/js/LoginPage.js"></script>
 
 </head>
 
@@ -18,23 +19,21 @@
 
     <section class=" background" id="outer-section">
 
-        <section class="inner-section1 ">
+        <section class="inner-section1">
             <div id="title-section">
                 <h2>Log In</h2>
-                <p class="text-muted">Don't have an account? <a href="SignUp.html"> Sign Up</a></p>
+                <p class="text-muted">Don't have an account? <a href="/Register"> Sign Up</a></p>
             </div>
             <hr>
-            <form class="col-sm-10 m-auto">
-                <div class="form-group">
-
-
-                    <input class=" login-input" type="email" placeholder="Email Address" name="email" id="email" />
-                    <i class="fa fa-envelope-o" aria-hidden="true"></i>
+            <form class="col-sm-10 m-auto p-sm-4">
+                <div class="overflow-hidden text-center mt-sm-2">
+                    <i class="fa fa-envelope-o m-sm-1" aria-hidden="true"></i>
+                    <input class="login-input" type="email" placeholder="Email Address" name="email" id="email" />
                 </div>
-                <div class="form-group" style="margin:10px auto;">
-
+                <div class="overflow-hidden text-center mt-sm-4 mb-sm-5">
+                    <i class="fa fa-unlock-alt m-sm-1" aria-hidden="true"></i>
                     <input class="login-input" type="password" placeholder="Password" name="password" id="password" />
-                    <i class="fa fa-unlock-alt" aria-hidden="true"></i>
+                    
                     <div class="text-danger small" id="alert"></div>
                 </div>
                 <div class="mt-4" id='checkbox-div'>
@@ -42,25 +41,22 @@
                         <input type="checkbox" class="custom-control-input" id="rememberMe" name="rememberMe" checked>
                         <label class="custom-control-label" for="rememberMe">Remember Me</label>
                     </div>
-                    <div class="text-primary small float-right">
-                        Forgot password!
-                    </div>
                 </div>
                 <div class="text-center">
                     <button class="btn w-50" type="button" id="submitButton" onclick="loginButtonClicked()">LOG IN
                         <span id="buttonSpinner"></span></button>
                 </div>
                 
-                <div class="text-center ">
-                    <button class="btn-continue" type="button" id="google">
+                <div class="text-center overflow-hidden pt-sm-2 pb-sm-2">
+                    <button class="btn-continue" type="button" onclick="LoginWGoogle()" id="google">
                         <img src="../templates/images/google.png" class="continue-img">Continue with Google</button>
                 </div>
-                <div class="text-center">
-                    <button class="btn-continue" type="button" id="google">
+                <div class="text-center overflow-hidden pt-sm-2 pb-sm-2">
+                    <button class="btn-continue" type="button" onclick="LoginWFacebook()" id="facebook">
                         <img src="../templates/images/facebook.png" class="continue-img">Continue with Facebook</button>
                 </div>
-                <div class="text-center">
-                    <button class="btn-continue" type="button" id="google">
+                <div class="text-center overflow-hidden pt-sm-2 pb-sm-2">
+                    <button class="btn-continue" type="button" onclick="LoginWLinkedIn()" id="LinkedIn">
                         <img src="../templates/images/linked in.jpg" class="continue-img">Continue with Linked In</button>
                 </div>
 
@@ -70,91 +66,6 @@
     </section>
     {{template "Footer1"}}
  
-    <script>
-
-        function openNav() {
-            document.getElementById("mySidenav").style.width = "250px";
-            document.getElementById("main").style.marginLeft = "250px";
-        }
-
-        function closeNav() {
-            document.getElementById("mySidenav").style.width = "0";
-            document.getElementById("main").style.marginLeft = "0";
-        }
-
-        var email = '';
-        var password = '';
-
-        window.addEventListener('load', function () {
-            email = getCookie('userEmail');
-            password = getCookie('password');
-            loginButtonClicked();
-
-        });
-        function registrationButton() {
-            window.location.href = "RegistrationPage.html";
-        }
-
-        function loginButtonClicked() {
-            document.getElementById('alert').innerHTML = ""
-            document.getElementById('buttonSpinner').className = "";
-            if (email == '' || password == '') {
-                email = document.getElementsByTagName('input')[0].value;
-                password = document.getElementsByTagName('input')[1].value;
-                var rememberMe = document.getElementsByTagName('input')[2].checked;
-            }
-
-            if (email == "" || password == "") {
-                return;
-            }
-
-            document.getElementById('buttonSpinner').className = "spinner-border spinner-border-sm";
-            var request;
-            if (window.XMLHttpRequest) {
-                request = new XMLHttpRequest();
-            }
-            else {
-                request = new ActiveXObject("Microsoft.XMLHTTP");
-            }
-
-            request.onreadystatechange = function () {
-                if (request.readyState == 4 && request.status == 200) {
-                    var response = request.responseText;
-
-                    if (response == "Invalid") {
-                        document.getElementById('alert').innerHTML = "Invalid username or password!"
-                        document.getElementById('buttonSpinner').className = "d-none";
-                    }
-
-                    if (response == "Okay") {
-                        window.location.replace("HomePage.html");
-                        document.getElementById('buttonSpinner').className = "d-none";
-                    }
-                }
-            }
-            request.open('POST', 'Login.php', true);
-            request.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
-            request.send("email=" + email + "&password=" + password + "&rememberMe=" + rememberMe);
-
-        }
-
-        function getCookie(cname) {
-            var name = cname + "=";
-            var decodedCookie = decodeURIComponent(document.cookie);
-            var ca = decodedCookie.split(';');
-            for (var i = 0; i < ca.length; i++) {
-                var c = ca[i];
-                while (c.charAt(0) == ' ') {
-                    c = c.substring(1);
-                }
-                if (c.indexOf(name) == 0) {
-                    return c.substring(name.length, c.length);
-                }
-            }
-            return "";
-        }
-
-    </script>
 </body>
 
 </html>
