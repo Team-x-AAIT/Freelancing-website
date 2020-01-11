@@ -1,0 +1,88 @@
+
+<!DOCTYPE html>
+</section>
+<html>
+
+<head>
+    <title>Login</title>
+    {{template "Head"}}
+
+   
+    
+    <link rel="stylesheet" href="../templates/css/signUp.css">
+
+</head>
+
+<body>
+    
+
+    {{template "Header1"}}
+
+    <section class="main-box ">
+        <div class="signup">
+            <div class="signUp-text">Sign Up</div>
+            <div class="signUp-text2">Already have an account? 
+                <a href="LoginPage.html" class="login-link">Login</a>
+            </div>
+            <hr>
+            <form>
+                <div class="form-group name">
+                  
+                  <input type="Name" class="form-control mr-2" id="FirstName"  placeholder="First Name">
+                  <input type="Name" class="form-control" id="LastName"  placeholder="Last Name">
+                </div>
+                <div class="form-group col-sm-13">
+                    <input type="email" class="form-control" id="exampleInputEmail1" aria-describedby="emailHelp" placeholder="Enter email">
+                    
+                </div>
+                <div class="form-group col-sm-13">
+                    
+                    <input type="password" class="form-control" id="exampleInputPassword1" placeholder="Password">
+                  </div>
+                  <div class="form-group col-sm-13">
+                    
+                    <input type="password" class="form-control" id="exampleInputPassword1" placeholder=" Confirm Password">
+                  </div>
+                  <div >
+                    <button class="btn w-100" type="button" id="submitButton" >SIGN UP
+                        <span id="buttonSpinner"></span></button>
+                </div>
+              </form>
+        </div>
+        <div class="bottom-text">
+            <div class="bottom-title">
+                More than 60k jobs are posted on FJobs every week
+            </div>
+            <hr>
+        </div>
+        <div class="texts">
+            <div class="text col-sm-4">
+                
+                <img src="../templates/images/skills.png" class="text-image">
+                <div>
+                <p class="text-title">Find what you need</p>
+                <p>Choose from specialized freelancers and agencies with 5000 skills.</p>
+            </div>
+            </div>
+            <div class="text col-sm-4">
+                
+                <img src="../templates/images/post.png" class="text-image">
+                <div>
+                <p class="text-title">Post today, hire tomorrow</p>
+                Get custom quotes right away on terms you negotiate directly.
+            </div>
+            </div>
+            <div class="text col-sm-4">
+                <img src="../templates/images/bill.png" class="text-image">
+                <div>
+                <p class="text-title">Engage with cofidence</p>
+               Only pay for work you authorize, with secure billing and invoices.
+            </div>
+            </div>
+        </div>
+    </section>
+    {{template "Footer1"}}
+ 
+</body>
+
+</html>
