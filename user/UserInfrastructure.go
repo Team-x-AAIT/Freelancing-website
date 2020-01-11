@@ -4,8 +4,11 @@ import (
 	"encoding/json"
 	"fmt"
 	"html/template"
+	"io"
 	"io/ioutil"
 	"net/http"
+	"os"
+	"path/filepath"
 
 	"github.com/Team-x-AAIT/Freelancing-website/entities"
 	"github.com/gorilla/sessions"
@@ -14,13 +17,6 @@ import (
 	"golang.org/x/oauth2/google"
 	"golang.org/x/oauth2/linkedin"
 )
-
-const htmlIndex = `<html><body>
-<a href="/GoogleLogin">Log in with Google</a>
-<a href="/LinkedInLogin">Log in with linked in</a>
-<a href="/FacebookLogin">Log in with Facebook</a>
-</body></html>
-`
 
 var (
 
@@ -67,9 +63,9 @@ var (
 	Temp = template.Must(template.ParseGlob("templates/*.html"))
 )
 
-// HandleMain is a Handler func that parse the main window.
-func HandleMain(w http.ResponseWriter, r *http.Request) {
-	fmt.Fprintf(w, htmlIndex)
+// WelcomePage is a Hanler func that handles the main
+func WelcomePage(w http.ResponseWriter, r *http.Request) {
+	Temp.ExecuteTemplate(w, "WelcomePage.html", nil)
 }
 
 // HandleGoogleLogin is a Handler func that initiate google oauth process to the google.Endpoint.
@@ -286,6 +282,11 @@ func Register(w http.ResponseWriter, r *http.Request) {
 	email := r.FormValue("email")
 	identification.ConfirmPassword = r.FormValue("confirmPassword")
 
+	if r.URL.String() == "/Register" && (email == "" && firstname == "" && lastname == "" && password == "") {
+		Temp.ExecuteTemplate(w, "SignUp.html", r)
+		return
+	}
+
 	if thirdParty == "true" {
 
 		if r.FormValue("serverAUT") != ServerAUT {
@@ -304,7 +305,8 @@ func Register(w http.ResponseWriter, r *http.Request) {
 
 	err := UService.Verification(userHolder, identification)
 	if err != nil {
-		panic(err)
+		w.Write([]byte(err.Error()))
+		return
 	}
 	if identification.TpFlag {
 		session, _ := cookieStore.Get(r, "Fjobs_User_Cookie")
@@ -313,9 +315,9 @@ func Register(w http.ResponseWriter, r *http.Request) {
 		session.Save(r, w)
 
 		http.Redirect(w, r, "/Dashboard", http.StatusSeeOther)
-	} else {
-		http.Redirect(w, r, "/Check_Your_Email", http.StatusSeeOther)
 	}
+
+	w.Write([]byte("okay"))
 	return
 
 }
@@ -323,13 +325,25 @@ func Register(w http.ResponseWriter, r *http.Request) {
 // Login is a Handler func that initaite login process.
 func Login(w http.ResponseWriter, r *http.Request) {
 
+	user := Authentication(r)
+	if user != nil {
+		http.Redirect(w, r, "/Dashboard", http.StatusSeeOther)
+		return
+	}
+
 	email := r.FormValue("email")
 	password := r.FormValue("password")
+
+	if r.URL.String() == "/Login" && (email == "" && password == "") {
+		Temp.ExecuteTemplate(w, "LoginPage.html", r)
+		return
+	}
 
 	err := UService.Login(email, password)
 
 	if err != nil {
-		panic(err)
+		w.Write([]byte(err.Error()))
+		return
 	}
 
 	session, _ := cookieStore.Get(r, "Fjobs_User_Cookie")
@@ -337,7 +351,7 @@ func Login(w http.ResponseWriter, r *http.Request) {
 	session.Values["auth"] = true
 	session.Save(r, w)
 
-	http.Redirect(w, r, "/Dashboard", http.StatusSeeOther)
+	w.Write([]byte("okay"))
 }
 
 // UpdateProfile is a Handler func that initaite the updating profile process.
@@ -345,7 +359,7 @@ func UpdateProfile(w http.ResponseWriter, r *http.Request) {
 
 	loggedInUser := Authentication(r)
 	if loggedInUser == nil {
-		http.Redirect(w, r, "/Login_Page", http.StatusSeeOther)
+		http.Redirect(w, r, "/Login", http.StatusSeeOther)
 		return
 	}
 
@@ -386,7 +400,7 @@ func Dashboard(w http.ResponseWriter, r *http.Request) {
 
 	user := Authentication(r)
 	if user == nil {
-		http.Redirect(w, r, "/Login_Page", http.StatusSeeOther)
+		http.Redirect(w, r, "/Login", http.StatusSeeOther)
 		return
 	}
 
@@ -427,7 +441,7 @@ func EditProfile(w http.ResponseWriter, r *http.Request) {
 
 	user := Authentication(r)
 	if user == nil {
-		http.Redirect(w, r, "/Login_Page", http.StatusSeeOther)
+		http.Redirect(w, r, "/Login", http.StatusSeeOther)
 		return
 	}
 
@@ -459,7 +473,7 @@ func Logout(w http.ResponseWriter, r *http.Request) {
 	session.Values["auth"] = false
 	session.Options.MaxAge = -1
 	session.Save(r, w)
-	http.Redirect(w, r, "/Login_Page", http.StatusSeeOther)
+	http.Redirect(w, r, "/Login", http.StatusSeeOther)
 }
 
 // AddMatchTag is a Handler func that accepts the matching tags store them.
@@ -467,7 +481,7 @@ func AddMatchTag(w http.ResponseWriter, r *http.Request) {
 
 	user := Authentication(r)
 	if user == nil {
-		http.Redirect(w, r, "/Login_Page", http.StatusSeeOther)
+		http.Redirect(w, r, "/Login", http.StatusSeeOther)
 		return
 	}
 	uid := user.UID
@@ -487,7 +501,7 @@ func RemoveMatchTag(w http.ResponseWriter, r *http.Request) {
 
 	user := Authentication(r)
 	if user == nil {
-		http.Redirect(w, r, "/Login_Page", http.StatusSeeOther)
+		http.Redirect(w, r, "/Login", http.StatusSeeOther)
 		return
 	}
 	uid := user.UID
@@ -506,7 +520,7 @@ func RemoveMatchTag(w http.ResponseWriter, r *http.Request) {
 func GetMatchTags(w http.ResponseWriter, r *http.Request) {
 	user := Authentication(r)
 	if user == nil {
-		http.Redirect(w, r, "/Login_Page", http.StatusSeeOther)
+		http.Redirect(w, r, "/Login", http.StatusSeeOther)
 		return
 	}
 
@@ -525,7 +539,7 @@ func GetProjectsWMatchTags(w http.ResponseWriter, r *http.Request) {
 
 	user := Authentication(r)
 	if user == nil {
-		http.Redirect(w, r, "/Login_Page", http.StatusSeeOther)
+		http.Redirect(w, r, "/Login", http.StatusSeeOther)
 		return
 	}
 

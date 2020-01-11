@@ -75,3 +75,6 @@
 --     foreign key (uid) references users(uid),
 --     foreign key (category) references categories(name)
 -- )
+
+
+-- link to the database ER diagram - https://dbdiagram.io/d/5e19c36394d9ab14375a1ddc
