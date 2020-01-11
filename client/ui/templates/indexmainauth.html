@@ -1,0 +1,41 @@
+{{ define "indexmainauth.layout" }}
+
+{{ template "navbarmain" . }}
+{{ template "indexmainauth.content" . }}
+{{ template "footer" . }}
+
+{{ end }}
+
+{{ define "indexmainauth.content" }}
+<div class="main-content">
+    <div class="container">
+     
+     <div class="px-5 w-75">
+      {{range .}}
+      <div >
+        <span class="d-none">{{.ID}}</span>
+        <strong class="mr-auto">{{.Title}}</strong>
+        <small class="text-muted">{{.CreatedAt}}</small>
+      </div>
+      <div >
+       {{ .Description}}
+      </div>
+      <div>
+        <!-- <form action=""> -->
+                <!-- <button class="btn btn-success my-2 my-sm-0" data-toggle="modal" data-target="#exampleModal1" aria-disabled="true">Apply</button> -->
+   <!-- <form action="/apply?id={{.ID}}" method="GET"> -->
+                <a href="/apply?id={{.ID}}" style="cursor: pointer; color: white;" class="btn btn-success my-2 my-sm-0" role="button" >Apply</a>
+              <!-- </form> -->
+                <!-- </form> -->
+<hr>
+              </div>
+        {{end}}
+      <hr>
+    </div>
+   
+    
+  </div>
+  </div>
+
+
+{{end}}

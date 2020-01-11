@@ -1,0 +1,35 @@
+{{ define "indexmainunauth.layout" }}
+
+{{ template "navbar" . }}
+{{ template "indexmainunauth.content" . }}
+{{ template "footer" . }}
+
+{{ end }}
+
+{{ define "indexmainunauth.content" }}
+<div class="main-content">
+  <div class="container">
+   
+   <div class="px-5 w-75">
+    {{range .}}
+    <div >
+      <span class="d-none">{{.ID}}</span>
+      <strong class="mr-auto">{{.Title}}</strong>
+      <small class="text-muted">{{.CreatedAt}}</small>
+    </div>
+    <div >
+     {{ .Description}}
+    </div>
+    <div>
+      <form action="">
+              <button class="btn btn-success my-2 my-sm-0" type="submit">Apply</button>
+      </form>
+      </div>
+      {{end}}
+    <hr>
+  </div>
+ 
+  
+</div>
+</div>
+{{end}}
