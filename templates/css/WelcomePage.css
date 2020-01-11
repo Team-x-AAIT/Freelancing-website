@@ -1,0 +1,251 @@
+* {
+    box-sizing:border-box;
+}
+body{
+    font-family: 'Raleway', sans-serif;
+    background-color: #EFF4F7;
+}
+#top-section{
+    margin-bottom: 80px;
+}
+h1,h2,h4{
+    font-weight: bolder;
+}
+header{
+    background-color: black;
+    background-repeat: no-repeat;
+    background-size: cover;
+    overflow: hidden;
+    height: 575px;
+
+}
+#article1{
+    height: 570px;
+    background-color: #fff;
+    overflow: hidden;
+}
+.tip{
+    font-size: larger;
+}
+.articleImage{
+    width: 50px;
+    height: 50px;
+}
+.hire{
+    background-color: #DA571F;
+    color: white;
+    padding: 20px;
+}
+.hire:hover{
+    background-color:white;
+    color:  #DA571F;
+    border: solid #DA571F;
+}
+#section-standing-man{
+    background-image: url("../../templates/images/employee.jpg");
+    background-size: contain;
+    background-repeat: no-repeat;
+}
+table td{
+    text-align: center;
+ 
+}
+.odd-td{  
+    width: 16%;
+}
+.lower{
+    padding: 20px 10px 0;
+}
+
+
+/* Slideshow container */
+.slideshow-container {
+  max-width: 80%;
+  height: 70%;
+  position: relative;
+  margin: auto;
+}
+
+/* Hide the images by default */
+.mySlides {
+    width: 100%;
+    height: 100%;
+    display: none;
+    border-radius: 10px;
+    text-align: center;
+
+}
+
+.mySlides p{
+    text-align: center;
+    color: white;
+    font-weight: bolder;
+    font-size: 36px;
+    margin: 30px 0 0;
+}
+.emp{
+    font-size: 46px !important;
+    margin: 0;
+    font-family: Arial, Helvetica, sans-serif !important;
+    color: #6DC88D !important;
+}
+.hfont{
+    font-family: Arial, Helvetica, sans-serif !important;
+}
+.marked{
+    background:#14B3F2;
+    display: inline-block;
+    margin: 0px auto;
+    font-weight: 700;
+    clear: both;
+}
+.marked-button{
+    width: 40%;
+    background: transparent;
+    border: solid #14B3F2;
+    font-weight: 900;
+    
+}
+.marked-button:hover{
+    background: #14B3F2;
+    color: white;
+    border: solid #14B3F2;
+}
+
+/* Next & previous buttons */
+.prev, .next {
+  cursor: pointer;
+  position: absolute;
+  top: 30%;
+  width: auto;
+  padding: 16px;
+  color: white;
+  font-weight: bold;
+  font-size: 18px;
+  transition: 0.6s ease;
+  border-radius: 0 3px 3px 0;
+  user-select: none;
+}
+
+/* Position the "next button" to the right */
+.next {
+  right: 0;
+  border-radius: 3px 0 0 3px;
+}
+
+/* On hover, add a black background color with a little bit see-through */
+.prev:hover, .next:hover {
+    background-color: #f1f1f1;
+    color: black;
+}
+
+
+/* The dots/bullets/indicators */
+.dot-group{
+    position: absolute;
+    top: 75%;
+    left: 48%;
+
+}
+.dot {
+  cursor: pointer;
+  height: 15px;
+  width: 15px;
+  margin: 0 2px;
+  background-color: #bbb;
+  border-radius: 50%;
+  display: inline-block;
+  transition: background-color 0.6s ease;
+}
+
+.active, .dot:hover {
+  background-color: #717171;
+}
+
+/* Fading animation */
+.fading {
+  -webkit-animation-name: fade;
+  -webkit-animation-duration: 1.5s;
+  animation-name: fade;
+  animation-duration: 1.5s;
+}
+
+@-webkit-keyframes fade {
+  from {opacity: .4} 
+  to {opacity: 1}
+}
+
+@keyframes fade {
+  from {opacity: .4} 
+  to {opacity: 1}
+}
+@media screen and (max-width: 950px) {
+    #about p{
+        font-size: 0.8em;
+    }
+    #article1 p{
+        font-size: 0.8em;
+    }
+    .articleImage{
+        width: 10%;
+        height: 10%;
+    }
+    #hire{
+        font-size: 0.9em;
+        padding: 3%;
+    }
+    table td p{
+        font-size: 1.6vw;
+    }
+    table td h4{
+        font-size: 2vw;
+    }
+    .mySlides p{
+        font-size: 30px;
+    }
+}
+@media screen and (max-width: 700px){
+    #about p{
+        font-size: 0.6em;
+    }
+    .mySlides p{
+        font-size: 23px;
+    }
+    #p-low{
+        font-size: 28px !important;  
+    }
+    .marked-button{
+        width: 70%;
+        margin: 30px auto;
+    }
+}
+@media screen and (max-width: 575px){
+    #about p{
+        font-size: 16px;
+    }
+    footer{
+        padding: 10px;
+    }
+    .sector{
+        border-right: none;
+        border-bottom: solid #333333 1px;
+        margin: 10px 0px;
+    
+    }
+    #section-standing-man{
+        display: none;
+    }
+    .after-change{
+        margin-top: 20px;
+    }
+    #hire{
+        margin-top: 40px;
+    }
+    table td p{
+        font-size: 12px;
+    }
+    table td h4{
+        font-size: 16px;
+    }
+
+}
