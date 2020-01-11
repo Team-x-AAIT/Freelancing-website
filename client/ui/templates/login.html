@@ -1,0 +1,28 @@
+{{ define "login.layout" }}
+{{ template "navbar" . }}
+{{ template "login.content" . }}
+{{ template "footer" . }}
+
+{{ end }}
+
+{{ define "login.content" }}
+<!-- <body class="text-center"> -->
+    <form class="form-signin mx-auto w-25 m-5" method="POST">
+      <!-- <img class="mb-4" src="https://getbootstrap.com/assets/brand/bootstrap-solid.svg" alt="" width="72" height="72"> -->
+      <h1 class="h3 mt-5 mb-3 font-weight-normal">Please Log in</h1>
+      <h5 class="text-danger">{{.}}</h5>
+      <label for="inputEmail" class="sr-only ">Email address</label>
+      <input type="email" name="email" id="inputEmail" class="form-control mb-3" placeholder="Email address" required autofocus>
+      <label for="inputPassword" class="sr-only">Password</label>
+      <input type="password" name="password" id="inputPassword" class="form-control mb-3" placeholder="Password" required>
+      <div class="checkbox mb-3 text-center">
+        <label >
+          <input type="checkbox" value="remember-me"> Remember me
+        </label>
+      </div>
+      <button class="btn btn-lg btn-primary btn-block mb-3" type="submit">Log in</button>
+      <p class="text-center"><span class="text-muted">Don't have an account? </span><a href="/signup">Create an Account</a></p>
+    </form>
+  <!-- </body> -->
+
+{{end}}

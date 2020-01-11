@@ -1,0 +1,95 @@
+{{ define "navbarmain" }}
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>Fjobs</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <!-- css -->
+    <link rel="stylesheet" href="../assets/css/bootstrap.min.css">
+    <link rel="stylesheet" href="../assets/css/tagsinput.css">
+    <link rel="stylesheet" href="../assets/css/main.css">
+    
+</head>
+
+<body>
+    <nav class="navbar navbar-expand-lg navbar-light bg-light">
+        <a class="navbar-brand" href="/indexmain"><h1>FJOBS</h1></a>
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarTogglerDemo02" aria-controls="navbarTogglerDemo02" aria-expanded="false" aria-label="Toggle navigation">
+          <span class="navbar-toggler-icon"></span>
+        </button>
+      
+        <div class="collapse navbar-collapse" id="navbarTogglerDemo02">
+          <form class="form-inline  my-lg-0" method="GET" action="/searchauth">
+            <input class="form-control mr-sm-2" name="category" type="search" placeholder="Search">
+            <button class="btn btn-outline-success my-2 my-sm-0" type="submit">Search</button>
+          </form>
+          <ul class="navbar-nav ml-auto mt-2 mt-lg-0">
+            <li class="nav-item">
+              <a class="nav-link" href="/indexmain">FIND JOB </a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="#">MY JOBS</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="#">POSTED JOB</a>
+              </li>
+              <li class="nav-item">
+                    <a style="cursor: pointer;" class="btn nav-link not-allowed" data-toggle="modal" data-target="#exampleModal" aria-disabled="true">POST JOB</a>
+                  </li>
+           
+              <!-- <li class="nav-item">
+               
+                <a class="nav-link" href="#">
+                  <span class='bg-success text-white pl-2 pr-2 pt-1 pb-1 rounded-circle'>L</span>
+                  <img src="L" alt="">
+                Liben</a>
+              </li> -->
+          </ul>
+         
+        </div>
+      </nav>
+
+
+
+
+      <div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+          <div class="modal-content">
+            <div class="modal-header">
+              <h5 class="modal-title">Post Job</h5>
+              <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+              </button>
+            </div>
+            <div class="modal-body">
+              <form action="/post" method="POST">
+                  
+                <label for="title">Title</label>
+              <input type="text" name="title" class="form-control"  placeholder="title" value="" required>
+    
+              <label for="description">Description</label>
+              <textarea type="text" name="description" class="form-control" placeholder="description" value="" required>
+    </textarea>
+  
+              <label for="category">Category</label>
+              <input type="text" name="category" class="form-control"  placeholder="category" value="" required>
+    
+              <button type="submit" class="btn btn-success my-3">Submit</button>
+    
+        
+
+    
+    
+    
+              </form>
+            </div>
+            <div class="modal-footer">
+              <!-- <button type="button" class="btn btn-primary">Save changes</button>
+              <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button> -->
+            </div>
+          </div>
+        </div>
+      </div>
+      {{ end }}
