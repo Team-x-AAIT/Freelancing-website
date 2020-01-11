@@ -39,14 +39,13 @@ func main() {
 	fileServer := http.FileServer(http.Dir("templates"))
 	mux.Handle("/templates/", http.StripPrefix("/templates/", fileServer))
 
-	mux.HandleFunc("/", user.HandleMain)
+	mux.HandleFunc("/", user.WelcomePage)
 	mux.HandleFunc("/Register", user.Register)
 	mux.HandleFunc("/Login", user.Login)
 	mux.HandleFunc("/EditProfile/Update", user.UpdateProfile)
 	mux.HandleFunc("/Verify", user.Verify)
 	mux.HandleFunc("/Dashboard", user.Dashboard)
 
-	mux.HandleFunc("/Login_Page", user.IndexNot)
 	mux.HandleFunc("/Logout", user.Logout)
 
 	mux.HandleFunc("/Post_Project", project.PostProject)
