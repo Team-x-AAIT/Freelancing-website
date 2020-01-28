@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+
+<html>
+
+<head>
+
+    <title>View Project</title>
+    {{template "Head"}}
+    <link rel="stylesheet" href="../templates/css/ViewProject.css" />
+    <script src="../templates/js/ViewProject.js"></script>
+
+</head>
+
+<body>
+    {{template "Header3" .LoggedInUser}}
+    <section class="mt-sm-5 mb-sm-5 container-fluid">
+
+
+        <div id="alert-box" class="alert alert-danger alert-dismissible fade show d-none" role="alert">
+            <p id="alert-message"></p>
+            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+            </button>
+        </div>
+
+
+        <section class="m-auto row p-sm-3 inner-section">
+            <div class="col-sm-12 bg-white">
+                <h1 class="mt-sm-3">Apply For Job!</h1>
+                <h4 class="mb-sm-4">Contact <span id="project-provider">Project Provider.</span></h4>
+                <hr />
+            </div>
+            {{with .ProjectUserContainer.Project}}
+            <article class="col-sm-8 bg-white pb-sm-4">
+                <form>
+                    <div class="form-group">
+                        <label class="small font-weight-bold" for="form-project-title">PROJECT TITLE</label>
+                        <input name="formProjectTitle" type="text" class="form-control" id="form-project-title"
+                            placeholder="{{.Title}}" disabled>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="small font-weight-bold" for="form-project-description">PROJECT
+                            DESCRIPTION</label>
+                        <textarea name="formProjectDescription" rows="3" class="form-control"
+                            id="form-project-description" placeholder="{{.Description}}" disabled></textarea>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="small font-weight-bold" for="form-project-description">PROJECT DETAILS</label>
+                        <textarea name="formProjectDescription" rows="5" class="form-control" id="form-project-details"
+                            placeholder="{{.Details}}" disabled></textarea>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="small font-weight-bold">Attached Files</label>
+                        <div id="pdf-repository" class="mr4 w-75 p-sm-4 mb-sm-3 border">
+                            {{ range .AttachedFiles}}
+                            <a class="resource" href="/asset_viewer?type=attached_file&asset={{.}}" target="_blank">
+                                <i class="fa fa-file-pdf-o"></i>
+                                <p>{{.}}</p>
+                            </a>
+                            {{else}}
+                            <p class="text-center small" style="font-style: italic;">No additional files available
+                            </p>
+                            {{end}}
+                        </div>
+                    </div>
+
+
+                    <div class="form-group">
+                        <label class="small font-weight-bold" for="message">Proposal</label>
+                        <div class="tooltip-group">
+                            <textarea name="proposal" rows="5" class="form-control" id="message"
+                                placeholder="Contact the project provider."></textarea>
+                        </div>
+                    </div>
+
+                    <div class="p-sm-3 text-right">
+                        <input type="text" name="pid" id="pid" value="{{.ID}}" hidden>
+                        <button type="button" id="form-post-button" class="btn btn-lg" onclick="onApplyClicked()">APPLY
+                            TO</button>
+                    </div>
+                </form>
+
+            </article>
+            {{end}}
+
+            {{with .ProjectUserContainer}}
+            <article id="form-tip" class="col-sm-4">
+                <h4 class="text-center font-weight-bold">PROJECT DESCRIPTION</h4>
+                <div id="project-description-part1">
+                    <div style="overflow: hidden">
+                        <div class="border p-sm-3" id="owner-info">
+                            <input hidden id="hiddenOwnerImg" value="{{.ProfilePic}}">
+                            <div class="overflow-hidden">
+                                <div class="float-left">
+                                    <label class="small font-weight-bold">Name: </label>
+                                    <p>{{.Firstname}} {{.Lastname}}</p>
+                                </div>
+
+                                <img class="rounded-circle img-fluid float-right" id="project-owner-img"
+                                    src="../templates/images/user.png" style="height: 60px; width: 60px;" />
+                            </div>
+
+                            <label class="small font-weight-bold">Phonenumber: </label>
+                            <p>+251 {{.Phonenumber}}</p>
+                            <label class="small font-weight-bold">Email: </label>
+                            <p>{{.Email}}</p>
+                            <label class="small font-weight-bold">Country: </label>
+                            <p>{{.Country}}</p>
+                        </div>
+
+                        <h5 class="mt-sm-2 font-weight-bold" id="article-project-title">{{.Project.Title}}</h5>
+                        <p>{{.CreatedString}}</p>
+                    </div>
+                    <hr>
+                    <div class="d-block" style="overflow: hidden">
+                        <p class="float-left font-weight-bold">Budget</p>
+                        <p class="float-right font-weight-bold text-success">ETB <span
+                                id="article-project-budget">{{.Project.Budget}}</span></p>
+                    </div>
+                    <hr>
+                    <div class="row">
+                        <div class="col-sm-4  text-center">
+                            <img class="img-fluid"
+                                src="../templates/images/verification-of-delivery-list-clipboard-symbol.png"
+                                style="height:40px;width:40px">
+                            <h6 class="font-weight-bold text-center mt-sm-2 small">CATAGORY</h6>
+                            <p class="text-center" id="article-project-category">{{.Project.Category}}</p>
+                        </div>
+
+                        <div class="col-sm-4 text-center">
+                            <img src="../templates/images/employee.png" style="height:40px;width:40px">
+                            <h6 class="font-weight-bold text-center mt-sm-2 small">WORK TYPE</h6>
+                            <input type="text" value="{{.Project.WorkType}}" id="hiddenWorkType" hidden>
+                            <p class="text-center" id="article-project-workType"></p>
+                        </div>
+                        <div class="col-sm-4  text-center">
+                            <img src="../templates/images/maintenance.png" style="height:40px;width:40px">
+                            <h6 class="font-weight-bold text-center mt-sm-2 small">SUBCATAGORY</h6>
+                            <p class="text-center" id="article-project-subCategory">{{.Project.Subcategory}}</p>
+                        </div>
+                    </div>
+
+                </div>
+            </article>
+            {{end}}
+        </section>
+    </section>
+
+    {{template "Footer2"}}
+
+</body>
+
+</html>

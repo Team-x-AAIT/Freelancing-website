@@ -1,0 +1,53 @@
+{{define  "all_projects.layout"}}
+    {{template  "nav".}}
+    {{template  "dash".}}
+    {{template "all_projects.content" .}}
+    {{template  "footer" .}}
+{{end}}
+{{define  "all_projects.content"}}
+    <main role="main" class="col-md-9 ml-sm-auto col-lg-10 pt-3 px-4">
+        <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pb-2 mb-3 border-bottom">
+            <h1 class="h2">All Projects</h1>
+        </div>
+        <table class="table table-striped">
+            <thead>
+            <tr>
+                <th scope="col">PID</th>
+                <th scope="col">Title</th>
+                <th scope="col">Description</th>
+                <th scope="col">Details</th>
+                <th scope="col">Budget</th>
+                <th scope="col"></th>
+            </tr>
+            </thead>
+            <tbody>
+
+            <tr>
+                <th scope="row">PID1</th>
+                <td> Freelancing Website</td>
+                <td> Lorem ipsum dolor sit amet, consectetur adipiscing elit. Suspendisse ullamcorper imperdiet mauris tincidunt feugiat. Aliquam. </td>
+                <td> Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed ultricies suscipit semper. Integer laoreet enim viverra quam lobortis aliquam. Sed sed nulla id neque vulputate ultricies. Quisque ligula libero, tempus vel justo ac, aliquam viverra orci. Donec in tortor dignissim, vulputate nisl et, imperdiet dui. Ut vulputate ligula massa. Duis et ante eget quam tristique lobortis. Sed auctor lacinia faucibus. </td>
+                <td> 50k</td>
+                <td><a href="/delete?aid=AID1">Delete</a></td>
+            </tr>
+            <tr>
+                <th scope="row">PID1</th>
+                <td> Freelancing Website</td>
+                <td> Lorem ipsum dolor sit amet, consectetur adipiscing elit. Suspendisse ullamcorper imperdiet mauris tincidunt feugiat. Aliquam. </td>
+                <td> Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed ultricies suscipit semper. Integer laoreet enim viverra quam lobortis aliquam. Sed sed nulla id neque vulputate ultricies. Quisque ligula libero, tempus vel justo ac, aliquam viverra orci. Donec in tortor dignissim, vulputate nisl et, imperdiet dui. Ut vulputate ligula massa. Duis et ante eget quam tristique lobortis. Sed auctor lacinia faucibus. </td>
+                <td> 50k</td>
+                <td><a href="/delete?aid=1">Delete</a></td>
+            </tr>
+            <tr>
+                <th scope="row">PID1</th>
+                <td> Freelancing Website</td>
+                <td> Lorem ipsum dolor sit amet, consectetur adipiscing elit. Suspendisse ullamcorper imperdiet mauris tincidunt feugiat. Aliquam. </td>
+                <td> Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed ultricies suscipit semper. Integer laoreet enim viverra quam lobortis aliquam. Sed sed nulla id neque vulputate ultricies. Quisque ligula libero, tempus vel justo ac, aliquam viverra orci. Donec in tortor dignissim, vulputate nisl et, imperdiet dui. Ut vulputate ligula massa. Duis et ante eget quam tristique lobortis. Sed auctor lacinia faucibus. </td>
+                <td> 50k</td>
+                <td><a href="/delete?aid=1">Delete</a></td>
+            </tr>
+            </tbody>
+        </table>
+
+    </main>
+{{end}}

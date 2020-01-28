@@ -1,0 +1,174 @@
+.main {
+  display: flex;
+  justify-content: space-between;
+}
+.continue-img {
+  height: 1.5rem;
+  width: 1.5rem;
+  border-radius: 20%;
+  margin-right: 10px;
+}
+
+.logoimg {
+  margin-bottom: 1rem;
+  height: 5rem;
+  width: 5rem;
+  background-size: cover;
+  background-repeat: no-repeat;
+  margin-left: 3rem;
+  border-radius: 50%;
+  box-shadow: 0 10px 10px grey;
+}
+.btn-continue {
+
+  padding: 10px;
+  width: 70%;
+  border-radius: 20px;
+  border: none;
+  box-shadow: 0 2px 2px grey;
+  background-color: white;
+  cursor: pointer;
+  color: grey;
+  text-decoration: none;
+}
+.btn-continue:focus {
+  outline: none;
+}
+
+.navbar {
+  padding: 0 !important;
+}
+.background {
+  background-image: url(../../templates/images/backgroundImage.jpg);
+  background-size: cover;
+  height: 100%;
+  padding-top: 5rem;
+  padding-bottom: 5rem;
+  padding-left: 30rem;
+}
+.fab {
+  color: white;
+}
+.d-block {
+  color: white;
+}
+.fa {
+  margin-left: -20px;
+}
+.login-input {
+  border: none;
+  width: 15rem;
+  background-color: transparent;
+  border-bottom: solid 1px #BBB;
+}
+.login-input:focus {
+  outline: none;
+}
+.login-input::-webkit-input-placeholder {
+  font-weight: 100;
+  background-color: transparent !important;
+  color: grey;
+}
+.inner-section1 {
+  border-radius: 3rem;
+  width: 55%;
+  background-color: rgba(251, 241, 241, 0.808);
+  box-shadow: 0 1px 4px 0 rgba(0, 0, 0, 0.2), 0 2px 10px 0 rgba(0, 0, 0, 0.19);
+  animation: moveInTop 1.5s;
+  backface-visibility: hidden;
+}
+
+.error{
+    color: red;
+    font-size: 11px;
+    margin-top: 10px;
+    margin-left: 5px;
+}
+
+@keyframes moveInTop {
+  0% {
+    opacity: 0;
+    transform: translateY(-100px);
+  }
+  80% {
+    transform: translateY(10px);
+  }
+  100% {
+    opacity: 1;
+    transform: translate(0);
+  }
+}
+
+#title-section {
+  height: 120px;
+  padding: 10px;
+  margin: 0px auto 10px;
+  padding-top: 30px;
+}
+#title-section p,
+#title-section h2 {
+  text-align: center;
+  color: black;
+}
+#title-section p a {
+  color: #da571f;
+}
+hr {
+  width: 90%;
+}
+form label {
+  font-weight: bolder;
+  font-size: small;
+}
+/* form input{
+    width: 50%;
+} */
+form input::placeholder {
+  font-size: 0.8em;
+}
+div[class="form-group"] {
+  margin: auto;
+  width: 50%;
+  color: black;
+}
+
+#checkbox-div {
+  margin: 10px auto;
+  width: 50%;
+  overflow: hidden;
+}
+#submitButton {
+  margin: 40px auto 20px;
+  font-weight: bold;
+  color: white;
+  background: #da571f;
+  border: solid #da571f 1.5px;
+}
+
+#submitButton:hover {
+  color: #da571f;
+  background: white;
+}
+@media screen and (max-width: 950px) {
+  .inner-section {
+    width: 100%;
+    margin-bottom: 20px;
+  }
+  div[class="form-group"] {
+    width: 70%;
+  }
+  #checkbox-div {
+    width: 70%;
+  }
+  header {
+    margin-bottom: 20px;
+  }
+}
+@media screen and (max-width: 700px) {
+  div[class="form-group"] {
+    width: 90%;
+  }
+  #checkbox-div {
+    width: 90%;
+  }
+}

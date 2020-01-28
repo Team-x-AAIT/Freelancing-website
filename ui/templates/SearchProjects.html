@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+
+<html>
+
+<head>
+    {{template "Head"}}
+    <title>Search</title>
+    <link rel="stylesheet" href="../templates/css/SearchProjects.css" />
+    <script src="../templates/js/SearchProjects.js"></script>
+</head>
+
+<body>
+    {{template "Header3" .LoggedInUser}}
+    <section class="mt-sm-5 mb-sm-5 container-fluid" id="outer-section">
+
+        <div id="csrf_error_div" class="alert alert-danger alert-dismissible fade show" style="display: none;"
+            role="alert">
+            <strong>Invalid</strong> token has been used!
+            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+            </button>
+        </div>
+
+        <section class="mb-sm-4 inner-section row" id="inner-section-one">
+            <form class="form-inline" method="POST" enctype="multipart/form-data" action="/Search_Project">
+
+                <!-- CSRF Protection -->
+                <input type="text" name="csrf" value="{{.CSRF}}" hidden>
+                <input type="text" id="csrf_error" value='{{.Error.Get "csrf"}}' hidden />
+
+                <div class="col-sm-3">
+                    <h1 style="font-weight: bold;color: #DA571F;">Search Project</h1>
+                </div>
+
+                <nav class="navbar col-sm-3  mr-sm-2" id="search-nav" style="box-shadow: none; border: none;">
+                    <input class="form-control mr-sm-2" type="search" name="searchKey" placeholder="Search"
+                        aria-label="Search">
+                    <button class="btn btn-outline-success my-2 my-sm-0" type="submit">Search</button>
+                </nav>
+
+                <div class="col-sm-6 row">
+                    <select class="col-sm-3 mr-sm-2 mt-sm-3 mb-sm-3 w-50" name="searchBy" id="searchBy">
+                        <option>Search By</option>
+                        <option value="title">Title</option>
+                        <option value="category">Category</option>
+                        <option value="subcategory">Subcategory</option>
+                    </select>
+
+                    <select class="col-sm-3 mt-sm-3 mb-sm-3 w-50 mr-sm-4" name="filterType" id="filterType">
+                        <option value="none">Work Type</option>
+                        <option value="1">Fixed</option>
+                        <option value="2">Perhour</option>
+                        <option value="3">Negotable</option>
+                    </select>
+                    <div class="col-sm-5 mt-sm-3 mb-sm-3" style="box-sizing: border-box;">
+                        <div class="row">
+                            <input class="col-sm-5 ml-sm-2" name="filterValue1" type="number" placeholder="start $"
+                                style="display: inline-block;">
+                            <span class="col-sm-1">-</span>
+                            <input class="col-sm-4" name="filterValue2" type="number" placeholder="end $"
+                                style="display: inline-block;">
+                        </div>
+                    </div>
+                </div>
+
+            </form>
+        </section>
+
+        <section class="row p-sm-0 inner-section">
+            <section class=" w-75 m-auto pr-sm-3 pl-sm-0">
+                <article>
+                    <div class="title-div">
+                        <h6>PROJECT LIST</h6>
+                    </div>
+                    <section class="display-article p-sm-0 text-center" id="sent-project-div">
+
+                        <div id="spinner-sentProject" class="d-none">
+                            <div id="spinnerP" class="spinner-border spinner-border-lg text-info" role="status">
+                                <span class="sr-only">Loading...</span>
+                            </div>
+                        </div>
+
+                        {{range .Projects}}
+
+                        <div id="{{.ID}}" class="container-fluid project-card overflow-hidden" onclick="onViewProject(this)">
+                            <div class="overflow-hidden  mt-sm-3">
+                                <input type="text" value="{{.ID}}" name="pid" hidden>
+                                <p class="ml-sm-1 project-title float-left">
+                                    {{.Title}}
+                                </p>
+                                <div class="float-right overflow-hidden">
+                                    <img class="img-fluid" style="width:35px; height:39px; padding-top: 4px;"
+                                        src="../templates/images/user.png">
+                                </div>
+                            </div>
+
+                            <p class="ml-sm-1 mt-sm-1">
+                                Description:
+                            </p>
+                            <p class="ml-sm-3 mt-sm-2">{{.Description}}</p class="m-sm-3">
+                            <div class="row overflow-hidden mt-sm-2">
+                                <div class="col-sm-5 masked ml-sm-1 overflow-hidden">
+                                    <p class="overflow-hidden"><span class="float-left">{{.Category}}</span></p>
+                                    <p class="overflow-hidden"><span class="float-left">{{.Subcategory}}</span></p>
+                                </div>
+
+                                <div class="col-sm-5 ml-sm-1 overflow-hidden">
+                                    <div class="float-right">
+                                        <p>Type: <span>{{ ToWorkType .WorkType }}</span></p>
+                                        <p>Budget: <span>{{.Budget}}</span> <span>ETB</span></p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        {{else}}
+                        <div class="invisible-div" id="invisible-div-1">
+                            <div class="container-fluid image-container">
+                                <img class="img-fluid" src="../templates/images/paperPlane.png">
+                            </div>
+
+                            <div>
+                                <h3 class="marked-h">There Is No Project To Show</h3>
+                                <p><span class="marked-p"><span class="font-weight-bold ">Use General keys</span>
+                                        go get more results</span></p>
+                            </div>
+                        </div>
+
+                        {{end}}
+
+                    </section>
+                </article>
+            </section>
+        </section>
+    </section>
+    {{template "Footer2"}}
+</body>
+
+</html>

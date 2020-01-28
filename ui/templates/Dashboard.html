@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+
+<html>
+
+<head>
+    {{template "Head"}}
+    <link rel="stylesheet" href="../templates/css/Dashboard.css" />
+    <script src="../templates/js/Dashboard.js"></script>
+</head>
+
+<body>
+    {{template "Header3" .LoggedInUser}}
+    <section class="mt-sm-5 mb-sm-5 container-fluid" id="outer-section">
+        <section class="mb-sm-4 inner-section row" id="inner-section-one">
+            <div class="col-sm-6">
+                <h1 style="font-weight: bold;color: #DA571F;">Welcome To FJob</h1>
+                <h1 class="text-muted">User!</h1>
+            </div>
+
+            <div class="col-sm-6 row m-sm-0">
+                <div class="status-display col-sm-4">
+                    <h1 class="text-center text-warning" id="sent-project-number">0</h1>
+                    <p class="text-muted change-font">SENT PROJECTS</p>
+                </div>
+
+                <div class="status-display  col-sm-4">
+                    <h1 class="text-center  text-success">0</h1>
+                    <p class="text-muted change-font">HIRED</p>
+                </div>
+
+                <div class="status-display  col-sm-4">
+                    <h1 class="text-center" style="color: #DA571F;">0</h1>
+                    <p class="text-muted change-font">APPLIED FOR</p>
+                </div>
+            </div>
+
+
+        </section>
+
+        <section class="row p-sm-0 inner-section">
+            <section class="col-sm-6 pr-sm-3 pl-sm-0">
+                <article>
+                    <div class="title-div">
+                        <h6>SENT PROJECTS</h6>
+                    </div>
+                    <section class="display-article p-sm-0 text-center" id="sent-project-div">
+
+                        <div id="spinner-sentProject" class="d-none">
+                            <div id="spinnerP" class="spinner-border spinner-border-lg text-info" role="status">
+                                <span class="sr-only">Loading...</span>
+                            </div>
+                        </div>
+
+                        <div class="invisible-div" id="invisible-div-1">
+                            <div class="container-fluid image-container">
+                                <img class="img-fluid" src="../templates/images/paperPlane.png">
+                            </div>
+
+                            <div>
+                                <h3 class="marked-h">You have no open projects</h3>
+                                <p><span class="marked-p"><span class="font-weight-bold ">Post a Project For Free</span>
+                                        and let the
+                                        best</span></p>
+                                <p><span class="marked-p"> freelancers come to
+                                        you</span></p>
+                                <button onclick="onPostButtonClicked()" class="btn btn-lg">LET'S GO</button>
+                            </div>
+                        </div>
+
+                    </section>
+                </article>
+            </section>
+
+            {{if .Prefe}}
+            <section class="col-sm-6 pl-sm-3 pr-sm-0">
+                <article>
+                    <div class="title-div">
+                        <h6>FREELANCERES</h6>
+
+                        <div id="match-adder" class="mt-sm-3 mr-sm-4" data-toggle="collapse" data-target="#match-form"
+                            aria-expanded="false" aria-controls="match-form">
+                            <i class="fas fa-plus float-right" style="color:#DA571F; cursor: pointer;"></i>
+                        </div>
+                        <div id="match-container" class="mt-sm-2 mr-sm-2">
+                        </div>
+                    </div>
+
+                    <div id="match-form" class="collapse container-fluid row m-sm-0">
+                        <span class="col-sm-2"></span>
+                        <select class="col-sm-4 mr-sm-3 mt-sm-3 mb-sm-3 w-50" name="category" id="category"
+                            onchange="onCategoryChange(this)">
+                            <option value="">Select category</option>
+                            <option value="Account Coordinator">Account Coordinator</option>
+                            <option value="Analyst Programmer">Analyst Programmer</option>
+                            <option value="Chemical Engineer">Chemical Engineer</option>
+                            <option value="Clinical Specialist">Clinical Specialist</option>
+                            <option value="Database Administrator III">Database Administrator III</option>
+                            <option value="Dental Hygienist">Dental Hygienist</option>
+                            <option value="Director of Sales">Director of Sales</option>
+                            <option value="Geologist IV">Geologist IV</option>
+                            <option value="Help Desk Operator">Help Desk Operator</option>
+                            <option value="Marketing Assistant">Marketing Assistant</option>
+                            <option value="Mechanical Systems Engineer">Mechanical Systems Engineer</option>
+                            <option value="Product Engineer">Product Engineer</option>
+                            <option value="Registered Nurse">Registered Nurse</option>
+                            <option value="Senior Editor">Senior Editor</option>
+                            <option value="Teacher">Teacher</option>
+                            <option value="Web Developer IV">Web Developer IV</option>
+
+                        </select>
+                        <span class="col-sm-2 setter d-none"></span>
+                        <select class="col-sm-4 mt-sm-3 mb-sm-3 w-50" name="subcategory" id="subcategory">
+                            <option value="">None</option>
+                        </select>
+
+                        <br>
+                        <span class="col-sm-2"></span>
+                        <select class="col-sm-4 mr-sm-3 mt-sm-3 mb-sm-3 w-50" name="worktype" id="worktype">
+                            <option value="">None</option>
+                            <option value="Fixed">Fixed</option>
+                            <option value="Negotiable">Negotiable</option>
+                            <option value="Perhour">Per Hour</option>
+                        </select>
+                        <span class="col-sm-2 setter d-none"></span>
+                        <input class="col-sm-4 mt-sm-3 mb-sm-3 w-50" type="button" name="add" value="Add"
+                            onclick="addMatchTag()" />
+                    </div>
+
+                    <section class="display-article p-sm-0 text-center" id="freelancers-div">
+                        <div id="spinner-freelancers" class="d-none">
+                            <div id="spinner" class="spinner-border spinner-border-lg text-info" role="status">
+                                <span class="sr-only">Loading...</span>
+                            </div>
+                        </div>
+                        <div class="invisible-div" id="invisible-div-2">
+                            <div class="container-fluid image-container">
+                                <img class="img-fluid  mt-sm-5" src="../templates/images/freelancer.webp">
+                            </div>
+
+                            <div>
+                                <h3 class="marked-h"><span class="marked-p">There Is No Project To Freelance.</span>
+                                </h3>
+                                <p> <span><span class="font-weight-bold ">We Will Update You</span> with the
+                                        latest</span></p>
+                                <p><span>project available.</span></p>
+                            </div>
+                        </div>
+
+
+                    </section>
+                </article>
+
+            </section>
+            {{end}}
+        </section>
+    </section>
+    {{template "Footer2"}}
+</body>
+
+</html>

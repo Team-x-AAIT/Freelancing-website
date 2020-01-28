@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html>
+    
+<head>
+{{template "HeadO"}}
+<link rel="stylesheet" href="../templates/css/ProfilePage.css" />
+<link rel="stylesheet" href="../templates/css/ViewApplicant.css" />
+<script src="../templates/js/ProfilePage.js"></script>
+</head>
+
+<body>
+    {{template "Header2" .Firstname}}
+    
+    <section class="container p-sm-0">
+        <div class="container m-sm-4">
+            {{if .Gender}}
+            <div class="mt-sm-4 title-main">Edit Your Profile</div>
+            {{else}}
+            <div class="mt-sm-4 title-main">User Profile</div>
+            {{end}}
+        </div>
+
+        <section class="container p-sm-0 block-container">
+            
+
+            <article id="pr-1" class="p-sm-4">
+                <!-- form beginning -->
+                <form action="/EditProfile/Update" method="POST" enctype="multipart/form-data">
+                    <div class="container-fluid">
+                        
+
+                        <div class="row">
+                            <div class="col-sm-6 mr4 pl-sm-4">
+                                <div class="ml-sm-4">
+                                    <img id="profile-pic" class="rounded-circle"
+                                        src="/templates/images/accountImage.png" />
+                                </div>
+                                <!-- name profilePic -->
+                                <div  class=" vw35 p-sm-2 ml-sm-4 mt-sm-4 text-center"
+                                    >
+                                    <input type="text" name="image-value" id="image-value" hidden
+                                        value="{{.ProfilePic}}">
+                                    
+                                    
+                                </div>
+                            </div>
+
+                            <div class="col-sm-6 mr4 pl-sm-4">
+                                <!-- name firstname -->
+                                <label for="firstname" class="mt-sm-3 "><b>First Name</b> </label><br />
+                                <p>Yenework</p>
+                                <hr class="HR-width">
+                                <!-- name lastname -->
+                                <label for="lastname" class="mt-sm-3"><b>Last Name</b> </label><br />
+                                <p>Tamerat</p>
+                                <hr class="HR-width">
+                            </div>
+                        </div>
+                    </div>
+            </article>
+
+            <article id="pr-2" class="p-sm-4">
+                <div class="container-fluid">
+                    <p class="title">professional title</span></p>
+                    
+                    <!-- name jobTitle -->
+                    <p>Professional  title</p>
+                    <hr class="HR-width">
+
+                </div>
+            </article>
+
+            <article id="pr-3" class="p-sm-4">
+                <div class="container-fluid">
+                    <p class="title">Professional overview</span></p>
+                    
+                    <!-- name bio -->
+                    <textarea disabled id="bio" class="box" name="bio" rows="8"
+                        placeholder="Try describing your self in less than 100 words.">{{.Bio}}</textarea>
+
+                </div>
+            </article>
+
+            <article id="pr-4" class="p-sm-4">
+                <div class="container-fluid">
+                    <p class="title"> CV</span></p>
+                    <div>
+                        
+
+    
+
+                    </div>
+
+                    <div id="pdf-display" class="mb-sm-3 mr4 overflow-hidden">
+                    </div>
+
+                    <div id="pdf-repository" class="mr4 w-75 p-sm-4 d-none mt-sm-3 mb-sm-3 border">
+                    </div>
+
+                </div>
+            </article>
+
+
+            <article id="pr-5" class="p-sm-4">
+                <div class="container-fluid">
+                    <p class="title">Contact Info</p>
+                    
+
+                    <div class="row">
+                        <div class="col-sm-5">
+                            <!-- name email -->
+                            <label for="email">Email </label><br />
+                            <p id="email" name="email" value="{{.Email}}" class="w-100"
+                                 ></p><br />
+                                 <hr class="HR-width">
+                        </div>
+
+                        <div class="col-sm-1">
+                        </div>
+
+                        <div class="col-sm-5 mr4 pl-sm-4">
+                            <!-- name phonenumber -->
+                            <label for="areaCode">Phone Number</label><br />
+                            
+                            <p id="phonenumber" class="ml-sm-3 w-50" name="phonenumber" value="{{.Phonenumber}}"
+                                placeholder="xxxxxxxxx" ></p>
+                                <hr class="HR-width">
+                        </div>
+                    </div>
+                </div>
+                </div>
+            </article>
+
+            <article id="pr-6" class="p-sm-4">
+                <div class="container-fluid">
+                    <p class="title">Address Info</p>
+                    
+                    <div class="row">
+                        <div class="col-sm-5">
+                            <!-- name country -->
+                            <label for="country">Country</label><br />
+                            <p id="country" name="country" value="{{.Country}}" class="w-100"
+                                placeholder="Ethiopia" ></p><hr class="HR-width"><br />
+                        </div>
+
+                        <div class="col-sm-1">
+                        </div>
+
+                        <div class="col-sm-5 mr4 pl-sm-4">
+                            <!-- name city -->
+                            <label for="city">City</label><br />
+                            <p id="city" name="city" value="{{.City}}" class="w-75"
+                                placeholder="Addis Ababa" ></p><hr class="HR-width"><br />
+                        </div>
+
+                    </div>
+                </div>
+                </div>
+            </article>
+
+        
+
+            
+        </section>
+    </section>
+
+    {{template "Footer1"}}
+</body>
+
+</html>

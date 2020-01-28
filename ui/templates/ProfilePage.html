@@ -1,0 +1,272 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    {{template "Head"}}
+    <title>Profile Page</title>
+    <link rel="stylesheet" href="../templates/css/ProfilePage.css" />
+    <script src="../templates/js/ProfilePage.js"></script>
+</head>
+
+<body>
+
+    {{template "Header2" .LoggedInUser.Firstname}}
+
+    <div id="csrf_error_div" class="alert alert-danger alert-dismissible fade show" style="display: none;" role="alert">
+        <strong>Invalid</strong> token has been used!
+        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+        </button>
+    </div>
+
+    <section class="container p-sm-0">
+        <div class="container m-sm-4">
+            {{if .LoggedInUser.Gender}}
+            <div class="mt-sm-4 title-main">Edit Your Profile</div>
+            {{else}}
+            <div class="mt-sm-4 title-main">Create Your Profile</div>
+            {{end}}
+        </div>
+
+        <section class="container p-sm-0 block-container">
+            <div class="container-fluid m-sm-0 p-sm-4 tip vw35">
+                Please take a moment and fill the required form for your profile, it
+                will become the public profile you’ll use to market your freelance
+                business to clients (you can edit it after saved).
+            </div>
+
+            <article id="pr-1" class="p-sm-4">
+                <!-- form beginning -->
+                <form action="/EditProfile" method="POST" enctype="multipart/form-data">
+                    <!-- CSRF Protection -->
+                    <input type="text" name="csrf" value="{{.CSRF}}" hidden>
+                    <input type="text" id="csrf_error" value='{{.Error.Get "csrf"}}' hidden />
+                    
+                    <div class="container-fluid">
+                        <p class="title">Tell us more about you</p>
+                        <p class="vw35">
+                            Please upload a professional portrait that clearly shows your
+                            face.
+                        </p>
+
+                        <div class="row">
+                            <div class="col-sm-6 mr4 pl-sm-4">
+                                <div class="ml-sm-4">
+                                    <img id="profile-pic" class="rounded-circle"
+                                        src="../templates/images/accountImage.png" />
+                                </div>
+                                <!-- name profilePic -->
+                                <div id="add-photo" class="box1 vw35 p-sm-2 ml-sm-4 mt-sm-4 text-center"
+                                    onclick="setProfileImage()">
+                                    <input type="text" name="image-value" id="image-value" hidden
+                                        value="{{.LoggedInUser.ProfilePic}}">
+                                    <input type="file" hidden id="image-uploader" name='profilePic' accept="image/*"
+                                        onchange="previewProfileImage(this)">
+                                    Add Photo
+                                </div>
+                                <p class="error">{{.Error.Get "profilePic"}}</p>
+                            </div>
+
+                            <div class="col-sm-6 mr4 pl-sm-4">
+                                <!-- name firstname -->
+                                <label for="firstname" class="mt-sm-3">First Name <span
+                                        style="color:#da571f;">*</span></label><br />
+                                <input name="firstname" id="firstname" value="{{.LoggedInUser.Firstname}}" class=" w-75"
+                                    onfocus="onFocusInInput()" /><br />
+                                <p class="error">{{.Error.Get "firstname"}}</p>
+                                <!-- name lastname -->
+                                <label for="lastname" class="mt-sm-3">Last Name <span
+                                        style="color:#da571f;">*</span></label><br />
+                                <input name="lastname" id="lastname" value="{{.LoggedInUser.Lastname}}" class=" w-75"
+                                    onfocus="onFocusInInput()" />
+                                <p class="error">{{.Error.Get "lastname"}}</p>
+                            </div>
+                        </div>
+                    </div>
+            </article>
+
+            <article id="pr-2" class="p-sm-4">
+                <div class="container-fluid">
+                    <p class="title">Add a professional title</span></p>
+                    <p class="vw35">
+                        Try choosing a title that will help you stand out.
+                    </p>
+                    <!-- name jobTitle -->
+                    <input class=" col-sm-5" id="jobTitle" name="jobTitle" value="{{.LoggedInUser.JobTitle}}"
+                        placeholder="Example: Full Stack Developer" />
+
+                </div>
+            </article>
+
+            <article id="pr-3" class="p-sm-4">
+                <div class="container-fluid">
+                    <p class="title">Write a professional overview</span></p>
+                    <p class="vw35">
+                        Highlight your top skills, experience, and interests.
+                        This is one of the first things clients will see on your profile.
+                    </p>
+                    <!-- name bio -->
+                    <textarea id="bio" name="bio" rows="8"
+                        placeholder="Try describing your self in less than 100 words.">{{.LoggedInUser.Bio}}</textarea>
+                    <p class="error">{{.Error.Get "bio"}}</p>
+
+                </div>
+            </article>
+
+            <article id="pr-4" class="p-sm-4">
+                <div class="container-fluid">
+                    <p class="title">Add a your CV</span></p>
+                    <div>
+                        <p class="vw35 float-left">
+                            CV is the most vital part of your profile, add one that stands out.
+                        </p>
+
+                        <!-- name cv -->
+                        <div id="add-cv" class="float-left box1 vw35 p-sm-2 ml-sm-2 text-center" onclick="setCV()">
+                            <input type="text" name="cv-value" id="cv-value" hidden value="{{.LoggedInUser.CV}}">
+                            <input type="file" size="" accept=".pdf" id="cv-uploader" name="cv" hidden
+                                onchange="previewCV(this)">
+                            <i class="fas fa-plus"></i>
+                        </div>
+                        <p style="color:#da571f;font-size: 10px; margin: 0 0 10px;padding: 0; clear: both;">Upload pdf
+                            format
+                            only.</p>
+                        <p class="error">{{.Error.Get "cv"}}</p>
+
+                    </div>
+
+                    <div id="pdf-display" class="mb-sm-3 mr4 overflow-hidden">
+                    </div>
+
+                    <div id="pdf-repository" class="mr4 w-75 p-sm-4 d-none mt-sm-3 mb-sm-3 border">
+                    </div>
+
+                </div>
+            </article>
+
+
+            <article id="pr-5" class="p-sm-4">
+                <div class="container-fluid">
+                    <p class="title">Contact Info</p>
+                    <p class="vw35">
+                        Fill your primary contact information since it is the main communication birdge.
+                    </p>
+
+                    <div class="row">
+                        <div class="col-sm-5">
+                            <!-- name email -->
+                            <label for="email">Email <span style="color:#da571f;">*</span></label><br />
+                            <input id="email" name="email" value="{{.LoggedInUser.Email}}" class="w-100"
+                                onfocus="onFocusInInput()" /><br />
+                            <p class="error">{{.Error.Get "email"}}</p>
+                        </div>
+
+                        <div class="col-sm-1">
+                        </div>
+
+                        <div class="col-sm-5 mr4 pl-sm-4">
+                            <!-- name phonenumber -->
+                            <label for="areaCode">Phone Number</label><br />
+                            <input class="w-25 text-center" id="areaCode" name="areaCode" placeholder="ETH +251"
+                                disabled />
+                            <input id="phonenumber" class="ml-sm-3 w-50" name="phonenumber"
+                                value="{{.LoggedInUser.Phonenumber}}" placeholder="xxxxxxxxx"
+                                onfocus="onFocusInInput()" />
+                            <p class="error">{{.Error.Get "phoneNumber"}}</p>
+                        </div>
+                    </div>
+                </div>
+                </div>
+            </article>
+
+            <article id="pr-6" class="p-sm-4">
+                <div class="container-fluid">
+                    <p class="title">Address Info</p>
+                    <p class="vw35">
+                        Fill your current address as it might be used as filter for job match.
+                    </p>
+                    <div class="row">
+                        <div class="col-sm-5">
+                            <!-- name country -->
+                            <label for="country">Country</label><br />
+                            <input id="country" name="country" value="{{.LoggedInUser.Country}}" class="w-100"
+                                placeholder="Ethiopia" /><br />
+                        </div>
+
+                        <div class="col-sm-1">
+                        </div>
+
+                        <div class="col-sm-5 mr4 pl-sm-4">
+                            <!-- name city -->
+                            <label for="city">City</label><br />
+                            <input id="city" name="city" value="{{.LoggedInUser.City}}" class="w-75"
+                                placeholder="Addis Ababa" /><br />
+                        </div>
+
+                    </div>
+                </div>
+                </div>
+            </article>
+
+            <article id="pr-7" class="p-sm-4">
+                <div class="container-fluid">
+                    <p class="title">Gender</p>
+
+                    <div id="radio-box" class="row pl-sm-4">
+                        <!-- name gender -->
+                        <input hidden id="gender-value" value="{{.LoggedInUser.Gender}}" />
+                        <div class="custom-control custom-radio col-sm-2">
+                            <input type="radio" class="custom-control-input" id="male" name="gender" value="M" checked>
+                            <label class="custom-control-label" for="male">Male</label>
+                        </div>
+
+                        <div class="custom-control custom-radio col-sm-2">
+                            <input type="radio" class="custom-control-input" id="female" name="gender" value="F">
+                            <label class="custom-control-label" for="female">Female</label>
+                        </div>
+
+                        <div class="custom-control custom-radio col-sm-2">
+                            <input type="radio" class="custom-control-input" id="other" value="O" name="gender">
+                            <label class="custom-control-label" for="other">Other</label>
+                        </div>
+                    </div>
+                </div>
+                </div>
+            </article>
+
+            <article id="pr-7" class="p-sm-4">
+                <div class="container-fluid">
+                    <p id="error-message" class="mb-sm-4">
+                    </p>
+
+                    <div class="row">
+                        <div class="col-sm-2"></div>
+                        <p id="status-btn1" class="col-sm-3 border-0 mr4" onclick="statusClicked(this)">
+                            Hier For Project
+                        </p>
+                        <div class="col-sm-2"></div>
+                        <p id="status-btn2" class="col-sm-3 border-0 mr4" onclick="statusClicked(this)">
+                            Work As Freelancer
+                        </p>
+                        <input id="hiddenStatus" name="prefe" hidden>
+                    </div>
+
+                    <div id="submit" class="text-center">
+                        <div id="spinner" class="spinner-border spinner-border-sm text-info" role="status">
+                            <span class="sr-only">Loading...</span>
+                        </div>
+                        <input type="submit" value="SAVE AND CONTINEU" class="d-inline">
+                        <i style="color:#da571f;" class="fas fa-arrow-right"></i>
+                    </div>
+                </div>
+                </form>
+
+
+            </article>
+        </section>
+    </section>
+
+    {{template "Footer1"}}
+</body>
+
+</html>

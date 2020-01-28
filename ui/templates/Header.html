@@ -1,0 +1,217 @@
+{{define "Header1"}}
+
+<script> function openNav() {
+        document.getElementById("mySidenav").style.width = "250px";
+
+    }
+
+    function closeNav() {
+        document.getElementById("mySidenav").style.width = "0";
+
+    }
+</script>
+
+
+<header>
+    <nav class="navbar navbar-expand-sm">
+        <div class="container-fluid">
+            <div class="navbar-header m-sm-2"><a href="/Login"><img id="nav-logo"
+                        src="../templates/images/logo.jpg" /></a></div>
+            <div class="navbar-text font-weight-bold" id="navText">Fjob</div>
+            <ul class="nav navbar-nav navbar-right" id="navMenu">
+                <li class="nav-item"><button id="nav-post-button" onclick="onPostButtonClicked()" class="btn h-100">POST
+                        PROJECT</button></li>
+                <li class="nav-item ml-sm-5">
+                    <a href="/Welcome" class="nav-link font-weight-bold small mr-sm-2">HOW
+                        IT WORKS</a>
+                </li>
+                <li class="nav-item ml-sm-3 pl-sm-3" id="register-link"><a href="/Register"
+                        class="nav-link font-weight-bold small mr-sm-2">REGISTER</a></li>
+
+                <li class="nav-item ml-sm-3">
+                    <a href="/Login" class="nav-link font-weight-bold small mr-sm-2">LOG
+                        IN</a>
+                </li>
+            </ul>
+
+            <div id="toogle-button" style="font-size:30px;cursor:pointer" onclick="openNav()"> &#9776;</div>
+        </div>
+
+
+        <div id="mySidenav" class="sidenav">
+
+            <a href="javascript:void(0)" class="closebtn" onclick="closeNav()">&times;</a>
+            <hr>
+            <a href="/Welcome">HOW IT WORKS</a>
+            <hr>
+            <a href="/Register">REGISTER</a>
+            <hr>
+            <a href="/Login">LOG IN</a>
+            <hr>
+            <a href="#"><button id="slider-post-button" onclick="onPostButtonClicked()">POST
+                    PROJECT</button></a>
+        </div>
+
+
+    </nav>
+
+</header>
+{{end}}
+
+
+
+{{define "Header2"}}
+
+<script> function openNav() {
+        document.getElementById("mySidenav").style.width = "250px";
+    }
+
+    function closeNav() {
+        document.getElementById("mySidenav").style.width = "0";
+    }
+</script>
+
+
+<header>
+    <nav class="navbar navbar-expand-sm">
+        <div class="container-fluid">
+            <div class="navbar-header m-sm-2"><a href="#"><img id="nav-logo" src="../templates/images/logo.jpg" /></a>
+            </div>
+            <div class="navbar-text font-weight-bold" id="navText">Fjob</div>
+            <ul class="nav navbar-nav navbar-right" id="navMenu">
+                <li class="nav-item"><button id="nav-post-button" onclick="onPostButtonClicked()" class="btn h-100">POST
+                        PROJECT</button></li>
+                <li class="nav-item ml-sm-5">
+                    <a href="/Welcome" class="nav-link font-weight-bold small mr-sm-2">HOW
+                        IT WORKS</a>
+                </li>
+                <li class="nav-item ml-sm-3 pl-sm-3" id="register-link"><a href="#"
+                        class="nav-link font-weight-bold small mr-sm-2">LOGGED IN AS {{.}}</a></li>
+            </ul>
+
+            <div id="toogle-button" style="font-size:30px;cursor:pointer" onclick="openNav()"> &#9776;</div>
+        </div>
+
+
+        <div id="mySidenav" class="sidenav">
+
+            <a href="javascript:void(0)" class="closebtn" onclick="closeNav()">&times;</a>
+            <hr>
+            <a href="/Welcome">HOW IT WORKS</a>
+            <hr>
+            <a>LOGGED IN AS {{.}}</a></li>
+            <hr>
+            <a href="#"><button id="slider-post-button" onclick="onPostButtonClicked()">POST
+                    PROJECT</button></a>
+        </div>
+
+
+    </nav>
+
+</header>
+{{end}}
+
+
+
+{{define "Header3"}}
+
+<script>
+
+    window.addEventListener('load', onHeaderLoad);
+
+    function openNav() {
+        document.getElementById("mySidenav").style.width = "250px";
+
+    }
+
+    function closeNav() {
+        document.getElementById("mySidenav").style.width = "0";
+
+    }
+
+    function onPostButtonClicked() {
+        window.location.href = "/Post_Project"
+    }
+
+    function onHeaderLoad() {
+
+        var hiddenInput1 = document.getElementById("small-image-value");
+        var profilePic = document.getElementById("profile-small");
+        var imageSrc = hiddenInput1.value;
+
+        if (imageSrc != "") {
+            profilePic.src = "/assets/profile_pic/" + imageSrc;
+        }
+
+    }
+
+    function goToProfilePage() {
+        window.location.href = "/EditProfile"
+    }
+
+    function onLogout() {
+        window.location.href = "/Logout"
+    }
+
+    function onSearch(){
+        window.location.href = "/Search_Project"
+    }
+
+    function onNotify(){
+        window.location.href = "/View_Applications_Status"
+    }
+
+</script>
+
+
+<header>
+    <nav class="navbar navbar-expand-sm">
+        <div class="container-fluid">
+            <div class="m-sm-2">
+                <a href="/Dashboard" class="navbar-header ml-sm-3"><img id="nav-logo"
+                        src="../templates/images/logo.jpg" /></a>
+            </div>
+
+            <div class="navbar-text font-weight-bold" id="navText">Fjob</div>
+            <ul class="nav navbar-nav navbar-right" id="navMenu">
+                <li class="nav-item"><button id="nav-post-button" onclick="onPostButtonClicked()" class="btn h-100">POST
+                        PROJECT</button></li>
+                <li class="nav-item ml-sm-5">
+                    <div><img class="small-images" src="../templates/images/search.png" onclick="onSearch()"/></div>
+                </li>
+                <li class="nav-item ml-sm-5">
+                    <div><img class="small-images" src="../templates/images/mail.png" onclick="onNotify()"/></div>
+                </li>
+                <li class="nav-item ml-sm-5">
+                    <div><img class="small-images" src="../templates/images/logout.png" onclick="onLogout()" /></div>
+                </li>
+                <li class="nav-item ml-sm-4 pl-sm-5 border-left" id="profile"><img class="rounded-circle"
+                        id="profile-small" onclick="goToProfilePage()" src="../templates/images/user.png" /><input
+                        hidden value="{{.ProfilePic}}" id="small-image-value" /></li>
+            </ul>
+
+            <div id="toogle-button" style="font-size:30px;cursor:pointer" onclick="openNav()"> &#9776;</div>
+        </div>
+
+
+        <div id="mySidenav" class="sidenav">
+
+            <a href="javascript:void(0)" class="closebtn" onclick="closeNav()">&times;</a>
+            <hr>
+            <a href="/EditProfile">PROFILE</a>
+            <hr>
+            <a href="/View_Applications_Status">NOTIFICATION</a>
+            <hr>
+            <a href="/Search_Project">Search Project</a>
+            <hr>
+            <a href="/Logout">LOG OUT</a>
+            <hr>
+            <a href="#"><button id="slider-post-button" onclick="onPostButtonClicked()">POST
+                    PROJECT</button></a>
+        </div>
+
+
+    </nav>
+
+</header>
+{{end}}

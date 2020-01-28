@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+</section>
+<html>
+
+<head>
+    <title>Applications</title>
+    {{template "Head"}}
+
+    <link rel="stylesheet" href="../templates/css/AppliedFor.css">
+
+</head>
+
+<body>
+
+
+    {{template "Header3" .LoggedInUser}}
+
+    <div class="main ">
+
+        <div class="main-box">
+            <h4 class="title">Applied For</h4>
+            <h5 class="title" style="color:#da571f;">Check your application status!</h5>
+            <hr>
+
+            {{range .Applications}}
+
+            <div class="project-status mb-2">
+                <div class="project">
+                    <p class="small"><b>Project title:</b></p>
+                    <p class="small">{{.Project.Title}}</p>
+                </div>
+                <div class="status">
+                    <p class="small"><b>Status:</b></p>
+                    <p class="small {{ GetColor .Status}}">{{ GetStatus .Status}}</p>
+                </div>
+                <div class="createdAt">
+                    <p class="small"><b>Applied at:</b></p>
+                    <p class="small">{{ToSDate .CreatedAt}}</p>
+                </div>
+            </div>
+
+            {{else}}
+
+            <div class="invisible-div" id="invisible-div-1">
+                <div class="container-fluid image-container text-center">
+                    <img class="img-fluid" src="../templates/images/paperPlane.png"
+                        style="height: 300px; width: 300px;">
+                </div>
+
+                <div>
+                    <h3 class="marked-h text-center">You haven't applied for a project!</h3>
+                    <p class="text-center"><span class="marked-p"><span class="font-weight-bold ">Come back</span>
+                            After you have applied for one.</span></p text-center>
+                </div>
+            </div>
+
+            {{end}}
+
+        </div>
+    </div>
+    {{template "Footer2"}}
+
+
+</body>
+
+</html>

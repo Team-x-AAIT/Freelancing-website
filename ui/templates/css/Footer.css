@@ -1,0 +1,56 @@
+footer{
+    background-image: linear-gradient(to right, #FF4E50, #F7B733);
+    color: white;
+}
+
+footer a{
+    margin-right: 1em;
+    color: white;
+}
+
+footer a:hover{
+    color: #DA571F;
+    text-decoration: none;
+}
+
+footer div > article:nth-child(2){
+    border-left: 0.4px solid white;
+    border-right: 0.4px solid white;
+}
+
+@media screen and (max-width: 950px) {
+
+    #about p{
+        font-size: 1.5vw;
+    }
+    .sector > a{
+        font-size: 1.5vw;
+    }
+    
+}
+
+@media screen and (max-width: 575px){
+    
+    #about p{
+        font-size: 16px;
+    }
+     .sector > a{
+        font-size: 16px;
+    }
+
+    footer{
+        padding: 10px;
+    }
+    .sector{
+        border-right: none;
+        border-bottom: solid #333333 1px;
+        margin: 10px 0px;
+    
+    }
+   
+    footer div > article:nth-child(2){
+        border-left: none;
+        border-right: none;
+        padding-bottom: 1em;
+    }
+}
