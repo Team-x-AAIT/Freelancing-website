@@ -510,5 +510,4 @@ func TestGetSubCategories(t *testing.T) {
 	}
 
 	defer resp.Body.Close()
-
 }
