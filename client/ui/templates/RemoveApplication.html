@@ -1,0 +1,65 @@
+<!doctype html>
+<html lang="en">
+  {{template "Head"}}
+
+   
+
+    <div class="container-fluid">
+      <div class="row">
+        {{template "Header"}}
+
+        <main role="main" class="col-md-9 ml-sm-auto col-lg-10 pt-3 px-4">
+          <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pb-2 mb-3 border-bottom">
+            <h1 class="h2">Remove Application</h1>
+          </div>
+
+          <form method="POST" action="/RemoveApplication" class="form-inline">
+            <div class="form-group mx-sm-3 mb-2">
+              <input name="applicant_UID" type="text" name="uid" class="mx-sm-1 form-control" id="inputUid" placeholder="UID">
+              <input name="pid" type="text" name="pid" class="form-control" id="inputPid" placeholder="PID">
+            </div>
+            <button type="submit" class="px-sm-4 btn btn-primary mb-2"><span data-feather="trash-2"></span></button>
+          </form>
+
+          {{if .ErrorValue}}
+          <div style="text-align: center;" class="container" style="margin-top: 50px;">
+            <h3 style="text-align: center; color: red;">Invalid! No Content</h3>
+          </div>
+          {{end}}
+
+          {{if .Application}}
+
+          {{with .Application}}
+
+          <div class="card mb-3">
+            <h5 class="card-header"><b>UID :</b> {{.ApplicantID}}</h5>
+            <h5 class="card-header"><b>PID :</b> {{.PID}}</h5>
+            <div class="card-body">
+             <p class="card-text"><b>Proposal: </b>{{.Proposal}}</p>
+              <p class="card-text"><b>Status: </b>{{.Status}}</p>
+              <p class="card-text"><b>Created At: </b>{{.CreatedAt}}</p>
+            </div>
+            <div class="card-footer ">
+              <h1></h1>
+              
+            </div>
+          </div>
+
+          {{end}}
+
+          {{end}}
+
+
+        </main>
+      </div>
+    </div>
+
+
+
+
+
+ {{template "Footer"}}
+
+    
+  </body>
+</html>
