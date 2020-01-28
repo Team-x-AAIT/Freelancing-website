@@ -1,83 +1,81 @@
 package main
 
 import (
+	"database/sql"
 	"net/http"
 
-	// "github.com/Team-x-AAIT/Freelancing-website/api/entity"
-
-	applyRepository "github.com/Team-x-AAIT/Freelancing-website/api/apply/repository"
-	applyService "github.com/Team-x-AAIT/Freelancing-website/api/apply/service"
-	"github.com/Team-x-AAIT/Freelancing-website/api/delivery/http/handler"
-	jobRepository "github.com/Team-x-AAIT/Freelancing-website/api/job/repository"
-	jobService "github.com/Team-x-AAIT/Freelancing-website/api/job/service"
-	myjobRepository "github.com/Team-x-AAIT/Freelancing-website/api/myjob/repository"
-	myjobService "github.com/Team-x-AAIT/Freelancing-website/api/myjob/service"
-	"github.com/Team-x-AAIT/Freelancing-website/api/user/repository"
-	"github.com/Team-x-AAIT/Freelancing-website/api/user/service"
-	"github.com/jinzhu/gorm"
 	"github.com/julienschmidt/httprouter"
+
+	"github.com/Team-x-AAIT/Freelancing-website/api/delivery/http/handler"
+	prrp "github.com/Team-x-AAIT/Freelancing-website/project/repository"
+	prsr "github.com/Team-x-AAIT/Freelancing-website/project/service"
+
+	urrp "github.com/Team-x-AAIT/Freelancing-website/user/repository"
+	ursr "github.com/Team-x-AAIT/Freelancing-website/user/service"
+
+	aprp "github.com/Team-x-AAIT/Freelancing-website/application/repository"
+	apsr "github.com/Team-x-AAIT/Freelancing-website/application/service"
+
+	_ "github.com/go-sql-driver/mysql"
 )
 
-func main() {
-	dbConn, err := gorm.Open("postgres", "postgres://postgres:admin123@localhost/fjobsdb?sslmode=disable")
+var (
+	db *sql.DB
+	ph *handler.ProjectHandler
+)
 
+func init() {
+
+	db, err := sql.Open("mysql", "root:0911@tcp(localhost:3306)/FjobsDB?parseTime=true")
 	if err != nil {
 		panic(err)
 	}
+	if err := db.Ping(); err != nil {
+		panic(err)
+	}
 
-	defer dbConn.Close()
-	// errs := dbConn.CreateTable(&entity.User{}).GetErrors()
+	URepositoryDB := urrp.NewUserRepository(db)
+	UService := ursr.NewUserService(URepositoryDB)
 
-	// if len(errs) > 0 {
-	// 	panic(errs)
-	// }
-	// errs1 := dbConn.CreateTable(&entity.Job{}).GetErrors()
+	PRepositoryDB := prrp.NewProjectRepository(db)
+	PService := prsr.NewProjectService(PRepositoryDB)
 
-	// if len(errs1) > 0 {
-	// 	panic(errs1)
-	// }
-	// errs2 := dbConn.CreateTable(&entity.MyJob{}).GetErrors()
+	ARepositoryDB := aprp.NewApplicationRepository(db)
+	AService := apsr.NewApplicationService(ARepositoryDB)
 
-	// if len(errs2) > 0 {
-	// 	panic(errs1)
-	// }
-	// errs3 := dbConn.CreateTable(&entity.Apply{}).GetErrors()
+	ph = handler.NewProjectHandler(PService, AService, UService)
 
-	// if len(errs3) > 0 {
-	// 	panic(errs1)
-	// }
-	userRepo := repository.NewUserGormRepo(dbConn)
-	userServ := service.NewUserService(userRepo)
-	userHandl := handler.NewUserHandler(userServ)
-
-	jobRepo := jobRepository.NewJobGormRepo(dbConn)
-	jobServ := jobService.NewJobService(jobRepo)
-	jobHandl := handler.NewJobHandler(jobServ)
-
-	myjobRepo := myjobRepository.NewMyJobGormRepo(dbConn)
-	myjobServ := myjobService.NewMyJobService(myjobRepo)
-	myjobHandl := handler.NewMyJobHandler(myjobServ)
-
-	applyRepo := applyRepository.NewApplyGormRepo(dbConn)
-	applyServ := applyService.NewApplyService(applyRepo)
-	applyHandl := handler.NewApplyHandler(applyServ)
-	router := httprouter.New()
-	// router.GET("/v1/users", userHandl.GetUsers)
-	// router.GET("/v1/users/:id", userHandl.GetSingleUser)
-	router.POST("/v1/user", userHandl.GetUser)
-	// router.PATCH("/v1/users/:id", userHandl.PatchUser)
-	router.POST("/v1/users", userHandl.PostUser)
-	router.DELETE("/v1/user/:id", userHandl.DeleteUser)
-	router.GET("/v1/user/:id", userHandl.RecommendedJobs)
-	// this is for jobs this
-	router.GET("/v1/job", jobHandl.GetJob)
-	router.GET("/v1/jobs", jobHandl.GetJobs)
-	router.POST("/v1/job", jobHandl.PostJob)
-	router.GET("/v1/jbyid", jobHandl.GetJobBy)
-	// this is for my job
-	router.POST("/v1/myjob/:userid/:myjob", myjobHandl.PostMyJob)
-	router.GET("/v1/myjob", myjobHandl.GetMyJob)
-	// this is for applying for job
-	router.POST("/v1/applies", applyHandl.PostApply)
-	http.ListenAndServe(":8181", router)
 }
+
+func main() {
+
+	router := httprouter.New()
+
+	// Route for searching projects using search keys.
+	// router.GET("/v1/user/projects/search", ph.SearchProject)
+	// Route for viewing a particular project.
+	router.GET("/v1/user/:uid/projects/:pid", ph.ViewProject)
+	// Route for a getting all the projects created by a particular user.
+	router.GET("/v1/user/:uid/projects", ph.GetUserProjects)
+	// Route for creating a project by a particular user.
+	router.POST("/v1/user/:uid/projects", ph.PostProject)
+	// Route for updating a project created by a particular user.
+	router.PUT("/v1/user/:uid/projects/:pid", ph.UpdateProject)
+	// Route for deleting a particular project.
+	router.DELETE("/v1/user/:uid/projects/:pid", ph.RemoveProject)
+
+	router.GET("/v1/user/:uid/projects/:pid/applications", ph.ViewApplicationRequests)
+	router.GET("/v1/user/:uid/projects/:pid/application", ph.ViewApplication)
+	router.POST("/v1/user/:uid/projects/:pid/applications", ph.ApplyForProject)
+	// router.PUT("/v1/user/projects/:pid/applications/:uid", ph.HireApplicant)
+	router.DELETE("/v1/user/:uid/projects/:pid/applications", ph.RemoveApplication)
+
+	server := http.Server{
+		Addr:    ":8181",
+		Handler: router,
+	}
+	server.ListenAndServe()
+
+}
+
+// Search_Project?searchKey=mobile developer&searchBy=te&filterType=1&filterValue1=100&filterValue2=500&pageNum=1
