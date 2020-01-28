@@ -1,0 +1,17 @@
+{{define  "delete.layout"}}
+{{template  "nav" .}}
+{{template  "delete.content".}}
+{{template  "footer"}}
+{{end}}
+{{define  "delete.content"}}
+    <section class="container main-content">
+    <form class="col-md-6 col-lg-6 col-sm-12" method="get" action="/delete">
+        <div class="form-group">
+            <label for="aid">AID</label>
+            <input name="aid" class="form-control" id="aid">
+        </div>
+
+        <button type="submit" class="btn btn-primary">Delete</button>
+    </form>
+    </section>
+{{end}}

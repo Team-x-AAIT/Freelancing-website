@@ -1,0 +1,21 @@
+{{define  "remove_user.layout"}}
+    {{template  "nav".}}
+    {{template  "dash".}}
+    {{template "remove_user.content" .}}
+    {{template  "footer" .}}
+{{end}}
+{{define  "remove_user.content"}}
+    <main role="main" class="col-md-9 ml-sm-auto col-lg-10 pt-3 px-4">
+        <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pb-2 mb-3 border-bottom">
+            <h1 class="h2">Remove User</h1>
+        </div>
+        <form class="form-inline">
+
+            <div class="form-group mx-sm-3 mb-2">
+                <input type="text" class="form-control" id="inputPid" placeholder="UID">
+            </div>
+            <button type="submit" class="btn btn-danger mb-2"><span data-feather="trash-2"></span></button>
+        </form>
+
+    </main>
+{{end}}

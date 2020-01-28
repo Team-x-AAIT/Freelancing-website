@@ -1,0 +1,127 @@
+<!doctype html>
+<html lang="en">
+{{template "Head"}}
+
+
+
+<div class="container-fluid">
+  <div class="row">
+    {{template "Header"}}
+
+    <main role="main" class="col-md-9 ml-sm-auto col-lg-10 pt-3 px-4">
+      <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pb-2 mb-3 border-bottom">
+        <h1 class="h2">Post Project</h1>
+      </div>
+
+      {{if .Location}}
+      <div style="color: rgb(95, 216, 95); margin-bottom: 10px;">
+        The location of the project can be identified by {{.Location}}
+      </div>
+      {{end}}
+
+      {{if .ErrorValue}}
+
+      <div style="text-align: center;" class="container" style="margin-top: 50px;">
+        <h3 style="text-align: center; color: red;">Invalid! No Content</h3>
+      </div>
+
+      {{end}}
+
+      <form method="POST" action="/PostProject" class="mb-3">
+        <div class="form-row">
+          <div class="form-group col-md-6">
+            <label for="uid">UID</label>
+            <input type="text" name="uid" class="form-control" id="uid">
+          </div>
+          <div class="form-group col-md-6">
+            <label for="title">Title</label>
+            <input type="text" name="title" class="form-control" id="title" placeholder="Website">
+          </div>
+        </div>
+        <div class="form-group">
+          <label for="desc">Description</label>
+          <input type="text" name="description" class="form-control" id="desc" placeholder="Freelacing Website">
+        </div>
+        <div class="form-group">
+          <label for="detail">Details</label></br>
+          <textarea class="col-lg-12" rows="5" name="details" id="detail"></textarea>
+        </div>
+      
+        <div class="form-row">
+          <div class="form-group col-md-6">
+            <label for="cat">Category</label>
+      
+            <select class="form-control" name="category" id="cat">
+              <option value="">Select category</option>
+              <option value="Account Coordinator">Account Coordinator</option>
+              <option value="Analyst Programmer">Analyst Programmer</option>
+              <option value="Chemical Engineer">Chemical Engineer</option>
+              <option value="Clinical Specialist">Clinical Specialist</option>
+              <option value="Database Administrator III">Database Administrator III</option>
+              <option value="Dental Hygienist">Dental Hygienist</option>
+              <option value="Director of Sales">Director of Sales</option>
+              <option value="Geologist IV">Geologist IV</option>
+              <option value="Help Desk Operator">Help Desk Operator</option>
+              <option value="Marketing Assistant">Marketing Assistant</option>
+              <option value="Mechanical Systems Engineer">Mechanical Systems Engineer</option>
+              <option value="Product Engineer">Product Engineer</option>
+              <option value="Registered Nurse">Registered Nurse</option>
+              <option value="Senior Editor">Senior Editor</option>
+              <option value="Teacher">Teacher</option>
+              <option value="Web Developer IV">Web Developer IV</option>
+            </select>
+      
+          </div>
+          <div class="form-group col-md-6">
+            <label for="subcategory">Sub Category</label>
+      
+            <select class="form-control" name="subcategory" id="subcategory">
+              <option value="">Select category</option>
+              <option value="Account Coordinator">Account Coordinator</option>
+              <option value="Analyst Programmer">Analyst Programmer</option>
+              <option value="Chemical Engineer">Chemical Engineer</option>
+              <option value="Clinical Specialist">Clinical Specialist</option>
+              <option value="Database Administrator III">Database Administrator III</option>
+              <option value="Dental Hygienist">Dental Hygienist</option>
+              <option value="Director of Sales">Director of Sales</option>
+              <option value="Geologist IV">Geologist IV</option>
+              <option value="Help Desk Operator">Help Desk Operator</option>
+              <option value="Marketing Assistant">Marketing Assistant</option>
+              <option value="Mechanical Systems Engineer">Mechanical Systems Engineer</option>
+              <option value="Product Engineer">Product Engineer</option>
+              <option value="Registered Nurse">Registered Nurse</option>
+              <option value="Senior Editor">Senior Editor</option>
+              <option value="Teacher">Teacher</option>
+              <option value="Web Developer IV">Web Developer IV</option>
+            </select>
+          </div>
+        </div>
+        <div class="form-row">
+          <div class="form-group col-md-6">
+            <label for="bud">Budget</label>
+            <input type="text" name="budget" class="form-control" id="bud">
+          </div>
+          <div class="form-group col-md-6">
+            <label for="worktype">Work Type</label>
+      
+            <select class="form-control" name="worktype" id="worktype">
+              <option value="1">Fixed</option>
+              <option value="2">Perhour</option>
+              <option value="3">Negotiable</option>
+            </select>
+      
+          </div>
+        </div>
+        <button type="submit" class="btn btn-primary">Post</button>
+      </form>
+      
+    </main>
+  </div>
+</div>
+
+{{template "Footer"}}
+
+
+</body>
+
+</html>

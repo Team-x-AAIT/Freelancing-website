@@ -1,0 +1,83 @@
+
+<!DOCTYPE html>
+</section>
+<html>
+
+<head>
+    <title>Login</title>
+    {{template "Head"}}
+
+    <link rel="stylesheet" href="../templates/css/LoginPage.css">
+    <script src="../templates/js/LoginPage.js"></script>
+
+</head>
+
+<body>
+    
+
+    {{template "Header1"}}
+
+    <section class=" background" id="outer-section">
+
+        <div id="csrf_error_div" class="alert alert-danger alert-dismissible fade show" style="position:absolute;top: 100px; left: 610px; display: none;" role="alert">
+            <strong>Invalid</strong> token has been used!
+            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+            </button>
+        </div>
+        <section class="inner-section1">
+            <div id="title-section">
+                <h2>Log In</h2>
+                <p class="text-muted">Don't have an account? <a href="/Register"> Sign Up</a></p>
+            </div>
+            <hr>
+            <form method="POST" action="/Login" enctype="multipart/form-data" class="col-sm-10 m-auto p-sm-4">
+                <!-- CSRF Protection -->
+                <input type="text" name="csrf" value="{{.CSRF}}" hidden>
+                <input type="text" id="csrf_error" value='{{.Error.Get "csrf"}}' hidden />
+
+                <div class="overflow-hidden text-center mt-sm-2">
+                    <i class="fa fa-envelope-o m-sm-1" aria-hidden="true"></i>
+                    <input class="login-input" type="email" placeholder="Email Address" name="email" id="email" required/>
+                </div>
+                <div class="overflow-hidden text-center mt-sm-4">
+                    <i class="fa fa-unlock-alt m-sm-1" aria-hidden="true"></i>
+                    <input class="login-input" type="password" placeholder="Password" name="password" id="password" required/>
+                    
+                    <div class="text-danger small" id="alert"></div>
+                    <p class="error">{{.Error.Get "login"}}</p>
+                </div>
+                
+                <!-- <div class="mt-4" id='checkbox-div'>
+                    <div class="custom-control custom-checkbox float-left">
+                        <input type="checkbox" class="custom-control-input" id="rememberMe" name="rememberMe" checked>
+                        <label class="custom-control-label" for="rememberMe">Remember Me</label>
+                    </div>
+                </div> -->
+                <div class="text-center">
+                    <button class="btn w-50" type="submit" id="submitButton">LOG IN
+                        <span id="buttonSpinner"></span></button>
+                </div>
+                
+                <div class="text-center overflow-hidden pt-sm-2 pb-sm-2">
+                    <button class="btn-continue" type="button" onclick="LoginWGoogle()" id="google">
+                        <img src="../templates/images/google.png" class="continue-img">Continue with Google</button>
+                </div>
+                <div class="text-center overflow-hidden pt-sm-2 pb-sm-2">
+                    <button class="btn-continue" type="button" onclick="LoginWFacebook()" id="facebook">
+                        <img src="../templates/images/facebook.png" class="continue-img">Continue with Facebook</button>
+                </div>
+                <div class="text-center overflow-hidden pt-sm-2 pb-sm-2">
+                    <button class="btn-continue" type="button" onclick="LoginWLinkedIn()" id="LinkedIn">
+                        <img src="../templates/images/linked in.jpg" class="continue-img">Continue with Linked In</button>
+                </div>
+
+
+            </form>
+        </section>
+    </section>
+    {{template "Footer1"}}
+ 
+</body>
+
+</html>

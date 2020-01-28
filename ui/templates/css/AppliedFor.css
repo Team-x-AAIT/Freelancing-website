@@ -1,0 +1,40 @@
+.main {
+  padding: 4rem 25rem;
+  background-color: #f2f2f2;
+}
+.main-box {
+  padding: 2rem;
+  background-color: white;
+  box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
+  border-radius: 4px;
+}
+.title {
+  text-align: center;
+  font-weight: 600;
+}
+.project-status {
+  display: flex;
+  justify-content: space-between;
+  border-bottom: 1px dashed #bbb;
+}
+
+.image-container {
+  overflow: hidden;
+  margin-bottom: 50px;
+}
+
+.marked-p {
+  background-color: #ffdaaf;
+}
+
+.yellow {
+    color: #da571f;
+}
+
+.green {
+    color: rgb(53, 226, 53);
+}
+
+.red {
+    color: red;
+}

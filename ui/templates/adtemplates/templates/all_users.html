@@ -1,0 +1,62 @@
+{{define  "all_users.layout"}}
+    {{template  "nav".}}
+    {{template  "dash".}}
+    {{template "all_users.content" .}}
+    {{template  "footer" .}}
+{{end}}
+{{define  "all_users.content"}}
+    <main role="main" class="col-md-9 ml-sm-auto col-lg-10 pt-3 px-4">
+        <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pb-2 mb-3 border-bottom">
+            <h1 class="h2">All Users</h1>
+        </div>
+        <table class="table table-striped">
+            <thead>
+            <tr>
+                <th scope="col">UID</th>
+                <th scope="col">Firstname</th>
+                <th scope="col">Lastname</th>
+                <th scope="col">Email</th>
+                <th scope="col">Job</th>
+                <th scope="col">Country</th>
+                <th scope="col">City</th>
+
+                <th scope="col"></th>
+            </tr>
+            </thead>
+            <tbody>
+
+            <tr>
+                <th scope="row">UID1</th>
+                <td> John</td>
+                <td>Doe </td>
+                <td> example@gmail.com </td>
+                <td> graphics design</td>
+                <td> Ethiopia</td>
+                <td>A.A</td>
+                <td><a href="/delete?aid=AID1">Delete</a></td>
+            </tr>
+            <tr>
+                <th scope="row">UID1</th>
+                <td> John</td>
+                <td>Doe </td>
+                <td> example@gmail.com </td>
+                <td> graphics design</td>
+                <td> Ethiopia</td>
+                <td>A.A</td>
+                <td><a href="/delete?aid=AID1">Delete</a></td>
+            </tr>
+            <tr>
+                <th scope="row">UID1</th>
+                <td> John</td>
+                <td>Doe </td>
+                <td> example@gmail.com </td>
+                <td> graphics design</td>
+                <td> Ethiopia</td>
+                <td>A.A</td>
+                <td><a href="/delete?aid=AID1">Delete</a></td>
+            </tr>
+            </tbody>
+        </table>
+
+    </main>
+{{end}}

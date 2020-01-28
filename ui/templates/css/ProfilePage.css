@@ -1,0 +1,182 @@
+body {
+  background-color: #f2f2f2;
+}
+
+.title-main {
+  font-size: 1.3em;
+  font-weight: bold;
+}
+
+.block-container {
+  background-color: white;
+  box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
+  background: rgba(242, 242, 242, 0.88);
+  margin-bottom: 3em;
+}
+
+.tip {
+  border-bottom: 1px solid #707070;
+}
+
+.block-container > article {
+  background-color: white;
+}
+
+.title {
+  font-size: 1em;
+  font-weight: bold;
+}
+
+#profile-pic {
+  width: 180px;
+  height: 180px;
+  box-shadow: 0 1px 4px 0 rgba(143, 141, 141, 0.16),
+    0 6px 20px 0 rgba(0, 0, 0, 0.16);
+}
+
+.box1 {
+  box-shadow: 0 1px 4px 0 rgba(143, 141, 141, 0.16),
+    0 6px 20px 0 rgba(0, 0, 0, 0.16);
+}
+
+#add-photo {
+  width: 180px;
+  color: #da571f;
+  font-weight: 500;
+  border: none;
+  background-color: white;
+  cursor: pointer;
+}
+
+#add-cv {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  color: #da571f;
+  font-weight: 500;
+  border: none;
+  background-color: white;
+  cursor: pointer;
+}
+
+.block-container input,
+textarea {
+  border: none;
+  box-shadow: 0 1px 4px 0 rgba(143, 141, 141, 0.16),
+    0 0px 5px 0 rgba(0, 0, 0, 0.16);
+  padding: 5px 15px;
+}
+
+textarea {
+  width: 75% !important;
+}
+
+.custom-control-input:checked ~ .custom-control-label::before {
+  color: #fff;
+  border-color: #da571f;
+  background-color: #da571f;
+}
+
+#status-btn1 {
+  background-color: white;
+  box-shadow: 0 1px 4px 0 rgba(143, 141, 141, 0.16),
+    0 6px 20px 0 rgba(0, 0, 0, 0.16);
+  color: #d46c3f;
+  font-weight: 500;
+  padding: 1em;
+  text-align: center;
+  cursor: pointer;
+}
+
+#status-btn1:hover,#status-btn2:hover{
+    box-shadow: 0 8px 16px 0 rgba(0,0,0,0.2);
+}
+
+#status-btn2 {
+  background-color: #da571f;
+  box-shadow: 0 1px 4px 0 rgba(143, 141, 141, 0.16),
+    0 6px 20px 0 rgba(0, 0, 0, 0.16);
+  color: white;
+  font-weight: 500;
+  padding: 1em;
+  text-align: center;
+  cursor: pointer;
+
+}
+
+
+#submit {
+  margin: 4em auto 2em;
+}
+#submit input {
+  color: #da571f;
+  font-weight: bolder;
+  background-color: white;
+  border: none;
+  box-shadow: none;
+  cursor: pointer;
+}
+
+#submit input:focus{
+  outline: none;
+}
+
+#error-message {
+  color: red;
+  font-size: small;
+}
+
+.error{
+    color: red;
+    font-size: 11px;
+    margin-top: 2px;
+    margin-left: 5px;
+}
+
+@media screen and (max-width: 768px) {
+  textarea {
+    width: 100% !important;
+  }
+}
+
+@media screen and (max-width: 575px) {
+  .block-container {
+    padding: 0;
+  }
+  #title-main,
+  .title {
+    font-size: 1em;
+    padding-top: 1em;
+  }
+  .vw35 {
+    font-size: 3.5vw;
+  }
+
+  #profile-pic {
+    width: 30vw;
+    height: 30vw;
+  }
+  #add-photo {
+    width: 30vw;
+    margin-top: 1em;
+    padding: 0 1em;
+  }
+
+  #pr > div > div:nth-child(1) {
+    text-align: center;
+  }
+
+  .mr4 {
+    margin-top: 20px;
+  }
+
+  #add-cv {
+    padding: 0.8em;
+  }
+  #radio-box {
+    padding-left: 1em;
+  }
+  #pr-7 {
+    padding-bottom: 20px;
+  }
+}

@@ -1,0 +1,200 @@
+<!DOCTYPE html>
+
+<html>
+
+<head>
+
+    <title>Post Project</title>
+    {{template "Head"}}
+    <link rel="stylesheet" href="../templates/css/PostProject.css" />
+    <script src="../templates/js/PostProject.js"></script>
+
+</head>
+
+<body>
+
+    {{template "Header3" .LoggedInUser}}
+
+    <section class="mt-sm-5 mb-sm-5 container-fluid">
+
+        <div id="csrf_error_div" class="alert alert-danger alert-dismissible fade show" style="display: none;"
+            role="alert">
+            <strong>Invalid</strong> token has been used!
+            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+            </button>
+        </div>
+
+
+        <section class="m-auto row inner-section">
+            <article class="col-sm-8 bg-white p-sm-5">
+                <div>
+                    <h1 class="mt-sm-3">Get your project Done!</h1>
+                    <h4 class="mb-sm-4"> Post a project for Free - Start receiving proposals within minutes</h4>
+                    <hr />
+                </div>
+                <form method="POST" action="/Post_Project" enctype="multipart/form-data">
+
+                    <!-- CSRF Protection -->
+                    <input type="text" name="csrf" value="{{.CSRF}}" hidden>
+                    <input type="text" id="csrf_error" value='{{.Error.Get "csrf"}}' hidden />
+                    <input type="text" id="pid" name="pid" value="{{.Project.ID}}" hidden>
+
+
+                    <div class="form-group">
+                        <label class="small font-weight-bold" for="smallDescription">YOUR PROJECT TITLE <span
+                                style="color:#da571f;">*</span></label>
+                        <div class="tooltip-group">
+                            <input name="title" type="text" class="form-control" id="smallDescription"
+                                placeholder="e.g I need proffesional" value="{{.Project.Title}}">
+                            <!-- <span class="tooltiptext" id="smallDescription-error"></span> -->
+                            <p class="error">{{.Error.Get "title"}}</p>
+                        </div>
+
+                    </div>
+                    <div class="row">
+                        <div class="form-group col-sm-6">
+                            <label class="small font-weight-bold" for="category">CATEGORY <span
+                                    style="color:#da571f;">*</span></label>
+                            <div class="tooltip-group">
+                                <input hidden type="text" name="hiddenCategory" id="hiddenCategory"
+                                    value="{{.Project.Category}}">
+                                <select name="category" class="form-control" id="category"
+                                    onchange="onCategoryChange()">
+                                    <option value="">Select</option>
+                                    {{range .Categories}}
+                                    <option value="{{.}}">{{.}}</option>
+                                    {{end}}
+                                </select>
+                                <p class="error">{{.Error.Get "category"}}</p>
+                            </div>
+
+                        </div>
+                        <div class="form-group col-sm-6">
+                            <label class="small font-weight-bold" for="subcategory">SUBCATEGORY <span
+                                    style="color:#da571f;">*</span></label>
+                            <div class="tooltip-group">
+                                <input hidden type="text" name="hiddenSubcategory" id="hiddenSubcategory"
+                                    value="{{.Project.Subcategory}}">
+                                <select disabled name="subcategory" class="form-control" id="subcategory">
+                                    <option value="0">Select</option>
+                                </select>
+                                <p class="error">{{.Error.Get "subcategory"}}</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="small font-weight-bold" for="description">WHAT DO YOU NEED TO GET
+                            DONE? <span style="color:#da571f;">*</span></label>
+                        <div class="tooltip-group">
+                            <textarea name="description" rows="3" class="form-control" id="description"
+                                placeholder="breif description about your project.">{{.Project.Description}}</textarea>
+                        </div>
+                        <p class="error">{{.Error.Get "description"}}</p>
+
+                    </div>
+
+                    <div class="form-group">
+                        <label class="small font-weight-bold" for="description">DESCIBE AS MUCH DETAIL YOU CAN! <span
+                                style="color:#da571f;">*</span></label>
+                        <div class="tooltip-group">
+                            <textarea name="details" rows="5" class="form-control" id="details"
+                                placeholder="breif details of your project.">{{.Project.Details}}</textarea>
+                        </div>
+                        <p class="error">{{.Error.Get "detail"}}</p>
+                    </div>
+
+                    <div class="mb-sm-3 mr4 overflow-hidden">
+                        <p style="color:#da571f;font-size: 10px; margin: 0 0 10px;padding: 0; clear: both;">Upload pdf
+                            format
+                            only.</p>
+                        <p class="error">{{.Error.Get "cv"}}</p>
+                        <div id="add-files" class="p-sm-2 w-75 m-sm-2 text-center" onclick="setFiles()">
+                            <input type="file" accept=".pdf" id="file-uploader" name="files" hidden
+                                onchange="previewFiles(this)" multiple>
+                            <i class="fas fa-plus"></i>
+                            <p class="small">Attach Files</p>
+                        </div>
+
+                    </div>
+
+                    <div id="pdf-display-outer" class="d-none overflow-hidden p-sm-4">
+                        <i class="fas fa-times" style="font-size: 10px;color:red; float:right; cursor: pointer"
+                            onclick="removeFiles()"></i>
+
+                        <div id="pdf-display" class="overflow-hidden">
+                        </div>
+                    </div>
+
+                    <div class="row w-50 float-left">
+                        <div class="form-group col-sm-6">
+                            <label class="small font-weight-bold" for="workType">WORK TYPE</label>
+                            <div class="tooltip-group">
+                                <input hidden type="text" name="hiddenWorkType" id="hiddenWorkType"
+                                    value="{{.Project.WorkType}}">
+                                <select name="worktype" class="form-control" id="workType"
+                                    onfocusout="selectorOnFocusOut()">
+                                    <option value="1" selected="selected">Fixed Price</option>
+                                    <option value="2">Per Hour</option>
+                                    <option value="3">Negotiable</option>
+                                </select>
+                                <p class="error">{{.Error.Get "worktype"}}</p>
+                                <span class="tooltiptext" id="workType-error"></span>
+                            </div>
+
+                        </div>
+                        <div class="form-group col-sm-6">
+                            <label class="small font-weight-bold" for="budget">BUDGET</label>
+                            <div class="tooltip-group">
+                                <div class="input-group">
+                                    <input name="budget" class="form-control" id="budget" value="{{.Project.Budget}}">
+                                    <div class="input-group-append">
+                                        <span class="input-group-text  text-success">ETB</span>
+                                    </div>
+                                </div>
+                                <p class="error">{{.Error.Get "budget"}}</p>
+                                <span class="tooltiptext" id="budget-error"></span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="w-50 float-right p-sm-3 text-center">
+                        <button type="submit" id="form-post-button" class="btn btn-lg">POST PROJECT</button>
+                        <input type="submit" name="submit" id="submit" hidden>
+                    </div>
+                    <p id="alert-message" style="color: red; font-size: small; display: none; clear: both;"></p>
+                </form>
+
+            </article>
+
+            <article id="form-tip" class="col-sm-4 p-sm-5">
+                <h4 class="text-center mt-sm-5 font-weight-bold">USEFUL TIPS</h4>
+                <ol>
+                    <li>
+                        <p>Describe your project in as much detail as you can comfortably reveal - it will increase the
+                            quality of proposals you receive and shorten the selection process.</p>
+                    </li>
+                    <li>
+                        <p>Upload as much relevant information (pictures, documents, specifications, links, etc) as
+                            possible to get a realistic quote.</p>
+                    </li>
+                    <li>
+                        <p>Match the experience level to your requirements – remember, you’re looking for the best you
+                            can
+                            afford, not the cheapest you can get.</p>
+                    </li>
+                </ol>
+            </article>
+        </section>
+    </section>
+
+    {{template "Footer2"}}
+
+</body>
+
+</html>
+
+
+</body>
+
+</html>
